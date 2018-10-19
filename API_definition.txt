@@ -1,0 +1,28 @@
+exam
+    get (GET)
+    create (POST)
+    start (POST | PUT)
+    update (PUT)
+    delete (DELETE)
+    assign to student (PUT)
+    share with ta (PUT)
+    submit (consegna) (POST)
+    calculate final result (POST)
+    withdraw (POST)
+
+task
+    get (GET)
+    insert into exam (POST)
+    update (PUT)
+    delete (DELETE)
+    share with ta (PUT)
+    submit (POST)
+    get to correct (GET)
+    correct (POST)
+    
+    
+person  -> ta
+        -> student
+    insert (POST)
+    get (GET)
+
