@@ -1,80 +1,158 @@
 FORMAT: 1A
-HOST: http://polls.apiblueprint.org/
+HOST: https://se2-2018.herokuapp.com/
 
-# Davide Zanella
+# SE2
 
-Polls is a simple API allowing consumers to view polls and vote in them.
+SE2 is a simple API allowing user to create exam and tasks.
 
-## Questions Collection [/questions]
+## Exam Collection [/exams]
 
-### List All Questions [GET]
+### List All Exams [GET]
 
 + Response 200 (application/json)
 
         [
             {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 2048
-                    }, {
-                        "choice": "Python",
-                        "votes": 1024
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 512
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 256
-                    }
-                ]
+                "name": "Exam name",
+                "id": 25
             }
         ]
 
-### Create a New Question [POST]
+### Create a New Exam [POST]
 
-You may create your own question using this action. It takes a JSON
-object containing a question and a collection of answers in the
-form of choices.
+Lorem ipsum dolor sit amen....
 
 + Request (application/json)
 
         {
-            "question": "Favourite programming language?",
-            "choices": [
-                "Swift",
-                "Python",
-                "Objective-C",
-                "Ruby"
-            ]
+            "name": "Exam name",
+            "ta_id": 13
         }
 
 + Response 201 (application/json)
 
     + Headers
 
-            Location: /questions/2
+            Location: /exams/2
 
     + Body
 
             {
-                "question": "Favourite programming language?",
+                "name": "Exam name",
                 "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
+                "id": 25,
+                "tasks": [
                     {
-                        "choice": "Swift",
-                        "votes": 0
-                    }, {
-                        "choice": "Python",
-                        "votes": 0
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 0
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 0
+                        "task_id": 42,
+                        "name": "task name"
+                    },
+                    {
+                        "task_id": 43,
+                        "name": "task name"
                     }
                 ]
             }
+
+
+## Exam [/exams/{exam_id}]
+
+### Get Exam [GET]
+
++ Response 200 (application/json)
+
+        {
+            "name": "Exam name",
+            "published_at": "2015-08-05T08:40:51.620Z",
+            "id": 25,
+            "tasks": [
+                {
+                    "task_id": 42,
+                    "name": "task name"
+                }
+            ]
+        }
+
+### Update Exam [PUT]
+
++ Request (application/json)
+
+        {
+            "name": "Exam name",
+            "ta_id": 13
+        }
+        
++ Response 200 (application/json)
+
+        {
+            "started_at": "2015-08-05T08:40:51.620Z",
+        }
+
+### Delete Exam [DELETE]
+
++ Response 200
+
+### Submit Exam [POST]
+<!-- dubbio -->
+
++ Response 200
+
+
+## Assign Exam to Students [/exams/{exam_id}/assign]
+
+### Assign Exam to Students [PUT]
+
++ Request (application/json)
+
+        [
+            {
+                "student_id": 11
+            },
+            {
+                "student_id": 12
+            }
+        ]
+        
++ Response 200
+
+## Share Exam with Teaching Assistant [/exams/{exam_id}/share]
+
+### Share Exam with Teaching Assistant [PUT]
+
++ Request (application/json)
+
+        [
+            {
+                "ta_id": 11
+            },
+            {
+                "ta_id": 12
+            }
+        ]
+        
++ Response 200
+
+## Start Exam [/exams/{exam_id}/start]
+
+<!-- dubbio -->
+### Start Exam [GET]
+
++ Response 200 (application/json)
+
+        {
+            "started_at": "2015-08-05T08:40:51.620Z",
+        }
+
+## Calculate Exam Result [/exams/{exam_id}/{student_id}]
+
+<!-- dubbio -->
+### Calculate Exam Result [POST]
+
++ Response 200
+
+
+## Withdraw from Exam [/exams/{exam_id}/withdraw]
+
+<!-- dubbio -->
+### Withdraw from Exam [POST]
+
++ Response 200
