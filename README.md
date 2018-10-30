@@ -5,6 +5,7 @@
 * Anna Pedrotti
 * Stefano Huber
 * Andrea Dalla Costa
+* Sabrina Alexandra Rosso
 
 ### Useful links:
 
