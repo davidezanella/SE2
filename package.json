@@ -1,0 +1,23 @@
+{
+  "name": "se2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "api.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node api.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidezanella/SE2.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/davidezanella/SE2/issues"
+  },
+  "homepage": "https://github.com/davidezanella/SE2#readme",
+  "devDependencies": {
+    "express": "^4.16.4"
+  }
+}
