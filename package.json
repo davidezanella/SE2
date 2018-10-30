@@ -17,7 +17,8 @@
     "url": "https://github.com/davidezanella/SE2/issues"
   },
   "homepage": "https://github.com/davidezanella/SE2#readme",
-  "devDependencies": {
+  "dependencies": {
+    "body-parser": "^1.18.3",
     "express": "^4.16.4"
   }
 }
