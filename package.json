@@ -4,7 +4,11 @@
   "description": "",
   "main": "api.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
+    "jest": {
+      "verbose": true,
+      "collectCoverage": true
+    },
     "start": "node api.js"
   },
   "repository": {
@@ -20,5 +24,8 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.4"
+  },
+  "devDependencies": {
+    "jest": "^23.6.0"
   }
 }
