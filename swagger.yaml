@@ -4,18 +4,568 @@ info:
   description: SE2 is a simple API allowing user to create exam and tasks.
   version: "8234aab51481d37a30757d925b7f4221a659427e"
 host: se2-2018.herokuapp.com
+basePath: /v1
 schemes:
   - https
+produces:
+  - application/json
+
+
 paths:
-  /exams:
-    x-summary: Questions Collection
-    x-description: ''
+  /users:
     get:
-      summary: List all exams
+      summary: Returns the list of all users.
       responses:
         200:
-          description: 'List'
-          examples:
-            application/json:
-              - name: 'Exam name'
-              - id: 25
+          description: OK
+          schema:
+            type: array
+            items:
+                $ref: '#/definitions/User'
+        404:
+          description: Not Found
+    post:
+      summary: Create a new user.
+      parameters:
+        - in: body
+          name: user
+          description: The user to create
+          required: true
+          schema:
+            $ref: '#/definitions/User' #da rivedere per ID utente
+      responses:
+        201:
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        400:
+          description: Bad Request
+                
+  /users/{userID}:
+    parameters:
+      - in: path
+        name: userID
+        required: true
+        type: integer
+    get:
+      summary: Returns a user by ID.
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        404:
+          description: Not Found
+    put:
+      summary: Update a user by ID.
+      parameters:
+        - in: body
+          name: user
+          description: The user to update
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        409:
+          description: Conflict
+    delete:
+      summary: Delete a user by ID.
+      responses:
+        204:
+          description: No Content
+        404:
+          description: Not Found
+          
+  /tasks:
+    post:
+      summary: Create a task.
+      parameters:
+        - in: body
+          name: task
+          description: The task to create
+          required: true
+          schema:
+            $ref: '#/definitions/Task'
+      responses:
+        201:
+          description: OK
+          schema:
+            $ref: '#/definitions/Task'
+        400:
+          description: Bad Request
+            
+  /tasks/{taskID}:
+    parameters:
+      - in: path
+        name: taskID
+        required: true
+        type: integer
+    get:
+      summary: Returns a task by ID.
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Task'
+        404:
+          description: Not Found
+    put:
+      summary: Update a task by ID.
+      parameters:
+        - in: body
+          name: task
+          description: The task to update
+          required: true
+          schema:
+            $ref: '#/definitions/Task'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Task'
+        409:
+          description: Conflict
+    delete:
+      summary: Delete a task by ID.
+      responses:
+        204:
+          description: No Content
+        404:
+          description: Not Found
+            
+  /answers/{answerID}:
+    parameters:
+      - in: path
+        name: answerID
+        required: true
+        type: integer
+    get:
+      summary: Returns an answer by answerID.
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Answer'
+        404:
+          description: Not Found
+    put:
+      summary: Submit an answer.
+      parameters:
+        - in: body
+          name: answer
+          description: The answer to submit
+          required: true
+          schema:
+            $ref: '#/definitions/Answer'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Answer'
+        409:
+          description: Conflict
+            
+  /exams:
+    get:
+      summary: Returns all the exams.
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Exam'
+        404:
+          description: Not Found
+    post:
+      summary: Create a new exam.
+      parameters:
+        - in: body
+          name: exam
+          description: The exam to create
+          required: true
+          schema:
+            $ref: '#/definitions/Exam' #da rivedere per ID esame
+      responses:
+        201:
+          description: OK
+          schema:
+            $ref: '#/definitions/Exam'
+        400:
+          description: Bad Request
+            
+  /exams/{examID}:
+    parameters:
+      - in: path
+        name: examID
+        required: true
+        type: integer
+    get:
+      summary: Returns an exam by ID.
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Exam'
+        404:
+          description: Not Found
+    put:
+      summary: Update an exam by ID.
+      parameters:
+        - in: body
+          name: exam
+          description: The exam to update
+          required: true
+          schema:
+            $ref: '#/definitions/Exam'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Exam'
+        409:
+          description: Conflict
+    post:
+      summary: Start an exam and retrive tasks
+      responses:
+        200:
+          description: OK
+          schema: 
+            type: array
+            items:
+              type: integer
+        400:
+          description: Bad Request
+      
+    delete:
+      summary: Delete a exam by ID.
+      responses:
+        204:
+          description: No Content
+        404:
+          description: Not Found
+          
+  /exams/{examID}/submit:
+    parameters:
+      - in: path
+        name: examID
+        required: true
+        type: integer
+    post:
+      summary: Submit ad exam.
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Exam'
+        400:
+          description: Bad Request 
+            
+  /exams/{examID}/withdraw:
+    parameters:
+      - in: path
+        name: examID
+        required: true
+        type: integer
+    post:
+      summary: Withdraw from ad exam.
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Exam'
+        400:
+          description: Bad Request  
+          
+  /exam/{examID}/tasks/{taskID}/answers:
+    parameters:
+      - in: path
+        name: examID
+        required: True
+        type: integer
+      - in: path
+        name: taskID
+        required: True
+        type: integer
+    put:
+      summary: Submit or update an answer to a task
+      parameters:
+        - in: body
+          name: answer
+          required: True
+          schema:
+            $ref: '#/definitions/Answer'
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+
+  /exam/{examID}/students/{studentID}/scores:
+    parameters:
+      - in: path
+        name: examID
+        required: True
+        type: integer
+      - in: path
+        name: studentID
+        required: True
+        type: integer
+    get:
+      summary: Check the result obtained in an exam.
+      responses:
+        200:
+          description: OK
+          schema:
+            type: integer
+        404:
+          description: Not Found
+
+  /exam/{examID}/students:
+    parameters:
+      - in: path
+        name: examID
+        required: True
+        type: integer
+    get:
+      summary: List the students of an exam.
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              type: integer
+        404:
+          description: Not Found
+
+  /exam/{examID}/students/{studentID}/corrections:
+    parameters:
+      - in: path
+        name: examID
+        required: True
+        type: integer
+      - in: path
+        name: studentID
+        required: True
+        type: integer
+      - in: body
+        name: correction
+        required: True
+        schema:
+          $ref: '#/definitions/Correction'
+    put:
+      summary: Correct an exam.
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+
+  /exam/{examID}/peerCorrection:
+    parameters:
+      - in: path
+        name: examID
+        required: True
+        type: integer
+    get:
+      summary: Peer review request. 
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            description: IDs of answers to correct.
+            items:
+              type: integer
+        404:
+          description: Not Found            
+
+            
+  /answers/{answerID}/peerCorrections:
+    parameters:
+      - in: path
+        name: answerID
+        required: true
+        type: integer
+    put:
+      summary: submit a peer review correction.
+      parameters:
+        - in: body
+          name: correction
+          required: true
+          schema:
+            $ref: '#/definitions/Correction'
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+    get:
+      summary: retrieve a peer correction of an answer.
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Correction'
+        404:
+          description: Not Found
+              
+  /answers/{answerID}/peerCorrections/{correctionID}:
+    parameters:
+      - in: path
+        name: answerID
+        required: true
+        type: integer
+      - in: path
+        name: correctionID
+        required: true
+        type: integer
+    put:
+      summary: submit a correction for a peer review.
+      parameters:
+        - in: body
+          name: correction
+          required: true
+          schema:
+            $ref: '#/definitions/Correction'
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+definitions:
+  User:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      surname:
+        type: string
+    required:  
+      - id
+      - name
+      - surname
+  Task:
+    properties:
+      id:
+        type: integer
+        example: 1
+      title:
+        type: string
+        example: "Task title"
+      question:
+        type: string
+        example: ""
+      type:
+        type: string
+        enum: ["multi_choice", "single_choice", "open_answer", "true_false"]
+      choices:
+        type: array
+        items:
+            type: string
+        example: ["", ""]
+        required: [$type == "multi_choice"]
+      correct_answer:
+        type: array
+        items:
+          type: string
+    required:  
+      - id
+      - title
+      - question
+      - type
+  Exam:
+    properties:
+      id:
+        type: integer
+        example: 1
+      name:
+        type: string
+        example: "Exam 1"
+      created_at:
+        type: string
+        format: date-time
+        example: "2018-11-06T10:09:23:15Z"
+      start:
+        type: string
+        format: date-time
+      end:
+        type: string
+        format: date-time
+      duration:
+        type: string
+        format: time
+      review_deadline:
+        type: string
+        format: date-time
+      tasks:
+        type: array
+        items:
+          type: integer
+        example: [1, 2, 3]
+      students:
+        type: array
+        items:
+          type: integer
+        example: [1, 2, 3]
+      ta:
+        type: array
+        items:
+          type: integer
+        example: [1, 2, 3]
+    required:  
+      - id
+      - name
+      - published_at
+      - tasks
+      - users
+      - ta
+  Answer:
+    properties:
+      id:
+        type: integer
+        example: 42
+      user_id:
+        type: integer
+      task_id:
+        type: integer
+      type:
+        type: string
+        enum: ["multi_choice", "single_choice", "open_answer", "true_false"]
+      answer:
+        type: array
+        items:
+          type: string
+      submitted_at:
+        type: string
+        format: date-time
+        example: "2018-11-06T10:09:23:15Z"
+    required:  
+      - user_id
+      - task_id
+      - type
+      - answer
+      - submitted_at
+    
+  Correction:
+    properties:
+      id:
+        type: integer
+      answer_id:
+        type: integer
+      text:
+        type: string
+      score:
+        type: integer
+    required:
+      - answer_id
+      - text
+      - score
