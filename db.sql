@@ -39,6 +39,7 @@ CREATE TABLE answers(
     task_id integer not null,
     submitted_at timestamp not null,
     primary key(id),
+    unique(user_id, task_id),
     foreign key(user_id) references users(id),
     foreign key(task_id) references tasks(id)
 );
@@ -106,6 +107,7 @@ CREATE TABLE corrections(
     score integer not null,
     user_id integer not null,
     primary key(id),
+    unique(answer_id, user_id),
     foreign key(answer_id) references answers(id),
     foreign key(user_id) references users(id)
 );
@@ -116,6 +118,7 @@ CREATE TABLE peerCorrections(
     text varchar(200) not null,
     user_id integer not null,
     primary key(id),
+    unique(answer_id, user_id),
     foreign key(answer_id) references answers(id),
     foreign key(user_id) references users(id)
 );
@@ -127,6 +130,7 @@ CREATE TABLE taPeerCorrections(
     text varchar(200) not null,
     user_id integer not null,
     primary key(id),
+    unique(peer_correction_id, user_id),
     foreign key(answer_id) references answers(id),
     foreign key(user_id) references users(id),
     foreign key(peer_correction_id) references peerCorrections(id)
@@ -140,6 +144,7 @@ CREATE TABLE results(
     exam_id integer not null,
     user_id integer not null,
     primary key(id),
+    unique(exam_id, user_id),
     foreign key(exam_id) references exams(id),
     foreign key(user_id) references users(id)
 );
