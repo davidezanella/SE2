@@ -3,6 +3,8 @@ let answers_db = require('../db/answers_db');
 
 let answers = {
     insertAnAnswer: async function (answer) {
+        if(!(typeof answer === 'object'))
+            throw new Error("Answer object is not valid!");
         if (!isNumber(answer.user_id))
             throw new Error("User ID is not valid!");
         if (!isNumber(answer.task_id))

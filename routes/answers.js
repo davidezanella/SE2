@@ -7,7 +7,7 @@ router.get('/answers', (req, res) => {
     answers_logic.getAllAnswers()
         .then(data => res.json(data))
         .catch(e => {
-            res.sendStatus(500);
+            res.send(404, e.message);
             console.error(e.stack);
         });
 });
@@ -18,7 +18,7 @@ router.post('/answers', (req, res) => {
     answers_logic.insertAnAnswer(answer)
         .then(data => res.json(data))
         .catch(e => {
-            res.sendStatus(500);
+            res.send(400, e.message);
             console.error(e.stack);
         });
 });

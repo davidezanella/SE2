@@ -1,5 +1,21 @@
 let answers_logic = require('../logic/answers_logic');
 
+test('Undefined answer', () => {
+    let answer = undefined;
+
+    expect(answers_logic.insertAnAnswer(answer)).rejects.toBeInstanceOf(Error);
+});
+test('String answer', () => {
+    let answer = "a";
+
+    expect(answers_logic.insertAnAnswer(answer)).rejects.toBeInstanceOf(Error);
+});
+test('Array answer', () => {
+    let answer = ["a"];
+
+    expect(answers_logic.insertAnAnswer(answer)).rejects.toBeInstanceOf(Error);
+});
+
 test('Undefined user_id', () => {
     let answer = {
         user_id: undefined,
