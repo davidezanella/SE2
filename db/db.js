@@ -18,7 +18,10 @@ let db = {
     },
     executeQuery: async function (query, values) {
         let client = await this.getClient();
-        let res = await client.query(query, values);
+        let res = await client.query(query, values).catch(async (err) => {
+            await client.end();
+            throw err;
+        });
 
         await client.end();
         return res;
