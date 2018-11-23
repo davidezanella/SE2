@@ -15,7 +15,7 @@ router.get('/answers', (req, res) => {
 router.post('/answers', (req, res) => {
     let answer = req.body.Answer;
 
-    answers_logic.insertAnAnswer
+    answers_logic.insertAnAnswer(answer)
         .then(data => res.json(data))
         .catch(e => {
             res.sendStatus(500);
