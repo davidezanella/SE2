@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-let results_db = require('../db/results_db');
+let results_logic = require('../logic/results_logic');
 
 router.get('/results', (req, res) => {
     res.send("ok");

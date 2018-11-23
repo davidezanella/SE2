@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-let exams_db = require('../db/exams_db');
+let exams_logic = require('../logic/exams_logic');
 
 
 router.get('/exams', (req, res) => {
