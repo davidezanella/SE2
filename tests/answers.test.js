@@ -127,18 +127,27 @@ test('Empty array of answers', () => {
     expect(answers_logic.insertAnAnswer(answer)).rejects.toBeInstanceOf(Error);
 });
 
-test('Insert a valid answer', async () => {
+test('Insert a valid answer', async (done) => {
     let answer = {
         user_id: 1,
         task_id: 1,
         answers: ['a', 'c']
     };
-    
+
+    expect.assertions(1);
+
+    let data;
+    let exception = false;
     try {
-        const data = await answers_logic.insertAnAnswer(answer);
-        expect(typeof data).toBe('number');
+        data = await answers_logic.insertAnAnswer(answer);
     }
     catch (e) {
+        exception = true;
         expect(e.detail).toBe("Key (user_id, task_id)=(1, 1) already exists.");
     }
+
+    if(exception && data === undefined)
+        done();
+    else
+        expect(typeof data).toBe('number');
 });
