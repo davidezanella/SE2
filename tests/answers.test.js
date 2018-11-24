@@ -143,7 +143,6 @@ test('Insert a valid answer', async (done) => {
     }
     catch (e) {
         exception = true;
-        console.log(e);
         expect(e.detail).toBe("Key (user_id, task_id)=(1, 1) already exists.");
     }
 

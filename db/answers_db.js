@@ -10,7 +10,12 @@ let answers_db = {
     },
     insertAnswer: async function(answer){
         let res = await db.executeQuery('INSERT INTO answers (user_id, task_id, submitted_at) VALUES ($1, $2, NOW()) RETURNING id', [answer.user_id, answer.task_id]);
-        return res.rows[0].id;
+        let answer_id = res.rows[0].id;
+        
+        for(let answ of answer.answers)
+            await db.executeQuery('INSERT INTO answer_answers (answer_id, answer) VALUES ($1, $2)', [answer_id, answ]);
+        
+        return answer_id;
     }
 };
 
