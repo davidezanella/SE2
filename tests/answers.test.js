@@ -156,9 +156,9 @@ test('Insert a valid answer', async (done) => {
 
 /* API calls test */
 
-require('../api');
-
 test('Insert a valid answer via API', async () => {
+    let api = require('../api');
+
     let answer = {
         user_id: 1,
         task_id: 1,
@@ -175,8 +175,10 @@ test('Insert a valid answer via API', async () => {
 
     let text = await response.text();
 
-    if(response.status === 400)
+    if (response.status === 400)
         expect(text).toContain("duplicate key value violates unique constraint");
-    else if (response.status === 201) 
+    else if (response.status === 201)
         expect(typeof text).toBe('number');
+    
+    api.close();
 });
