@@ -1,4 +1,5 @@
 let answers_logic = require('../logic/answers_logic');
+let fetch = require('node-fetch');
 
 test('Undefined answer', () => {
     let answer = undefined;
@@ -134,8 +135,6 @@ test('Insert a valid answer', async (done) => {
         answers: ['a', 'c']
     };
 
-    expect.assertions(1);
-
     let data;
     let exception = false;
     try {
@@ -146,8 +145,43 @@ test('Insert a valid answer', async (done) => {
         expect(e.detail).toBe("Key (user_id, task_id)=(1, 1) already exists.");
     }
 
-    if(exception && data === undefined)
+    if (exception && data === undefined)
         done();
     else
         expect(typeof data).toBe('number');
+    done();
+});
+
+
+
+/* API calls test */
+
+require('../api');
+
+test('Insert a valid answer via API', (done) => {
+    let answer = {
+        user_id: 1,
+        task_id: 1,
+        answers: ['a', 'c']
+    };
+
+    let body = { Answer: answer };
+
+    let status;
+    fetch('http://localhost:3000/v1/answers', {
+        method: 'post',
+        body: JSON.stringify(body),
+        headers: { 'Content-Type': 'application/json' },
+    })
+        .then(res => {
+            status = res.status;
+            return res.text();
+        })
+        .then(text => {
+            if(status === 400)
+                expect(text).toContain("duplicate key value violates unique constraint");
+            else if (status === 201) 
+                expect(typeof text).toBe('number');
+            done();
+        });
 });

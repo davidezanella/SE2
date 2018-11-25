@@ -8,7 +8,7 @@ router.get('/answers', (req, res) => {
         .then(data => res.json(data))
         .catch(e => {
             res.status(400).send(e.message);
-            console.error(e.stack);
+            console.log(e.stack);
         });
 });
 
@@ -19,7 +19,7 @@ router.post('/answers', (req, res) => {
         .then(data => res.status(201).json(data))
         .catch(e => {
             res.status(400).send(e.message);
-            console.error(e.stack);
+            console.log(e.stack);
         });
 });
 
