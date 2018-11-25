@@ -158,7 +158,7 @@ test('Insert a valid answer', async (done) => {
 
 require('../api');
 
-test('Insert a valid answer via API', (done) => {
+test('Insert a valid answer via API', async () => {
     let answer = {
         user_id: 1,
         task_id: 1,
@@ -167,21 +167,16 @@ test('Insert a valid answer via API', (done) => {
 
     let body = { Answer: answer };
 
-    let status;
-    fetch('http://localhost:3000/v1/answers', {
+    let response = await fetch('http://localhost:3000/v1/answers', {
         method: 'post',
         body: JSON.stringify(body),
         headers: { 'Content-Type': 'application/json' },
-    })
-        .then(res => {
-            status = res.status;
-            return res.text();
-        })
-        .then(text => {
-            if(status === 400)
-                expect(text).toContain("duplicate key value violates unique constraint");
-            else if (status === 201) 
-                expect(typeof text).toBe('number');
-            done();
-        });
+    });
+
+    let text = await response.text();
+
+    if(response.status === 400)
+        expect(text).toContain("duplicate key value violates unique constraint");
+    else if (response.status === 201) 
+        expect(typeof text).toBe('number');
 });
