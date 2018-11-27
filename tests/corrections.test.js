@@ -1,5 +1,5 @@
 let corrections_logic = require('../logic/corrections_logic');
-
+let fetch = require ('node-fetch');
 
 test("Undefined correction", () => {
     let correction = undefined;
@@ -176,7 +176,7 @@ test("Object user_id", () => {
 
 });
 
-test("Insert a valid correction", () => {
+test("Insert a valid correction", async () => {
     let correction = {
         answer_id: 124,
         text: "t",
@@ -184,13 +184,13 @@ test("Insert a valid correction", () => {
         user_id: 1
     };
 
-    return corrections_logic.insertACorrection(correction)
-        .then((data) => {
-            expect(typeof data).toBe('number');
-        })
-        .catch((e) => {
-            expect(e.detail).toBe("Key (answer_id, user_id)=(124, 1) already exists."); 
-        });
+    try {
+        const data = await corrections_logic.insertACorrection(correction);
+        expect(typeof data).toBe('number');
+    }
+    catch (e) {
+        expect(e.detail).toBe("Key (answer_id, user_id)=(124, 1) already exists.");
+    }
 });
 
 
@@ -237,16 +237,67 @@ test("Array user_id in the filter", () => {
 
 });
 
-test("Insert valid filters", () => {
+test("Insert valid filters", async () => {
     let answer_id = 1;
     let user_id = 2;
-    return corrections_logic.getAllCorrections(answer_id, user_id)
-        .then((data) => {
-            expect(data).toBeInstanceOf(Array);
-            for (var i = 0; i < data.length; i++) {
-                expect(typeof data[i]).toBe('number');
-            }
-        })
+    const data = await corrections_logic.getAllCorrections(answer_id, user_id);
+    expect(data).toBeInstanceOf(Array);
+    for (var i = 0; i < data.length; i++) {
+        expect(typeof data[i]).toBe('number');
+    }
 
 });
 
+
+/*API calls test */
+
+let api;
+beforeAll(() => {
+    api = require('../api');
+});
+
+afterAll(() => {
+    api.close();
+});
+
+
+test("Insert valid correction via API", async () => {
+    let correction = {
+        answer_id: 124,
+        text: "t",
+        score: 1,
+        user_id: 1
+    };
+
+    let body = { Correction: correction};
+
+    let response = await fetch ('http://localhost:3000/v1/corrections', {
+        method: 'post',
+        body: JSON.stringify(body),
+        headers: { 'Content-Type': 'application/json' },    
+    });
+
+    let text = await response.text();
+
+    if (response.status === 400)
+        expect(text).toContain("duplicate key value violates unique constraint");
+    else if (response.status === 201)
+        expect(typeof text).toBe('number');
+    
+
+});
+
+test("Get all corrections via API", async () => {
+    let answer_id=124;
+    let user_id=1;
+
+    let response = await fetch('http://localhost:3000/v1/corrections?answer_id=' + answer_id + '&user_id=' + user_id);
+    
+    let json = await response.json();
+
+    if (response.status === 200) {
+        expect(json).toBeInstanceOf(Array);
+        for (let i of json)
+            expect(typeof i).toBe('number');
+}
+});
