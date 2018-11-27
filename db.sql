@@ -1,5 +1,6 @@
 CREATE TABLE users (
     id SERIAL not null,
+    username varchar(70) not null,
     name varchar(70) not null,
     surname varchar(70) not null,
     email varchar(70) not null,
