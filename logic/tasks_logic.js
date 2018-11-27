@@ -48,8 +48,8 @@ let tasks = {
     },
 
 
-    getAllTasks: async function (task_title, author_id, question, task_type) {
-        return tasks_db.getAllTasks();
+    getAllTasks: async function (task_title, author_id, task_type) {
+        return tasks_db.getAllTasks(task_title, author_id, task_type);
     }
 };
 

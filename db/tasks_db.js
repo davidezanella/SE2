@@ -1,8 +1,8 @@
 let db = require('./db');
 
 let tasks_db = {
-    getAllTasks: async function(){
-        let res = await db.executeQuery('SELECT id FROM tasks;');
+    getAllTasks: async function(task_title, author_id, task_type){
+        let res = await db.executeQuery('SELECT id FROM tasks WHERE ((title::text LIKE $1) OR (author::text LIKE $2) OR (type::text LIKE $3))', [task_title, author_id, task_type]);
 
         return res.rows.map((x) => {
             return x.id;

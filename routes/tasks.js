@@ -9,7 +9,7 @@ router.get('/tasks', (req, res) => {
     let question = req.query.question;
     let task_type = req.query.task_type;
 
-    tasks_logic.getAllTasks(task_title, author_id, question, task_type).then(data => res.json(data)).catch(err => {
+    tasks_logic.getAllTasks(task_title, author_id, task_type).then(data => res.json(data)).catch(err => {
         res.send(404, err.message);
     });
 });
