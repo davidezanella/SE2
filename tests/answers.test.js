@@ -244,11 +244,18 @@ test('Correct type parameters', async () => {
 
 
 /* API calls test */
+let api;
+beforeAll(() => {
+    api = require('../api');
+});
+
+afterAll(() => {
+    api.close();
+});
 
 /* Answer POST */
-test('Insert a valid answer via API', async () => {
-    let api = require('../api');
 
+test('Insert a valid answer via API', async () => {
     let answer = {
         user_id: 1,
         task_id: 1,
@@ -269,6 +276,22 @@ test('Insert a valid answer via API', async () => {
         expect(text).toContain("duplicate key value violates unique constraint");
     else if (response.status === 201)
         expect(typeof text).toBe('number');
+});
 
-    api.close();
+
+/* Answers GET all */
+test('Get all answers via API', async () => {
+    let user_id = 1;
+    let task_id = 1;
+    let type = 'single_choice';
+
+    let response = await fetch('http://localhost:3000/v1/answers?user_id=' + user_id + '&task_id=' + task_id + '&type=' + type);
+
+    let json = await response.json();
+
+    if (response.status === 200) {
+        expect(json).toBeInstanceOf(Array);
+        for (let i of json)
+            expect(typeof i).toBe('number');
+    }
 });
