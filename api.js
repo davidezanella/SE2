@@ -32,6 +32,4 @@ app.use('/' + version, users);
 
 let server = app.listen(PORT, () => console.log('Example app listening on port ' + PORT));
 
-
-
 module.exports = server;

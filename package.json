@@ -4,7 +4,7 @@
   "description": "",
   "main": "api.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --detectOpenHandles",
     "jest": {
       "verbose": true,
       "collectCoverage": true
