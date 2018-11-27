@@ -25,6 +25,7 @@
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "is-number": "^7.0.0",
+    "is-string": "^1.0.4",
     "pg": "^7.6.1"
   },
   "devDependencies": {
