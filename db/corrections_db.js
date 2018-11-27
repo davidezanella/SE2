@@ -7,8 +7,8 @@ let corrections_db = {
         return res.rows[0].id;
     },
 
-    getAllCorrections: async function () {
-        let res = await db.executeQuery('SELECT id FROM corrections');
+    getAllCorrections: async function (answer_id, user_id) {
+        let res = await db.executeQuery('SELECT id FROM corrections WHERE ((answer_id::text LIKE $1) AND (user_id::text LIKE $2))', [answer_id, user_id]);
         return res.rows.map((x) => {
             return x.id;
         });

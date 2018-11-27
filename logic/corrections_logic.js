@@ -16,8 +16,20 @@ let corrections = {
         return await corrections_db.insertACorrection(correction);
     },
 
-    getAllCorrections: async function () {
-        return await corrections_db.getAllCorrections();
+    getAllCorrections: async function (answer_id, user_id) {
+        if (!isNumber(answer_id) && (!(answer_id == undefined)))
+            throw new Error("Answer ID in the filter is not valid.");
+
+        if (!isNumber(user_id) && (!(user_id == undefined)))
+            throw new Error("User ID is not valid.");
+
+        if (answer_id == undefined || answer_id == null)
+            answer_id = '%'
+
+        if (user_id == undefined || user_id == null)
+            user_id = '%'
+
+        return await corrections_db.getAllCorrections(answer_id, user_id);
     },
 };
 
