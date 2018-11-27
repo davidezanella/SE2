@@ -1,6 +1,7 @@
 let answers_logic = require('../logic/answers_logic');
 let fetch = require('node-fetch');
 
+/* Answer POST */
 test('Undefined answer', () => {
     let answer = undefined;
 
@@ -153,9 +154,98 @@ test('Insert a valid answer', async (done) => {
 });
 
 
+/* Answers GET all */
+
+test('Undefined user_id', async () => {
+    let user_id = undefined;
+    let task_id = 1;
+    let type = 'single_choice';
+
+    let res = await answers_logic.getAllAnswers(user_id, task_id, type);
+    expect(res).toBeInstanceOf(Array);
+    for (let i of res)
+        expect(typeof i).toBe('number');
+});
+test('String user_id', () => {
+    let user_id = "a";
+    let task_id = 1;
+    let type = 'single_choice';
+
+    expect(answers_logic.getAllAnswers(user_id, task_id, type)).rejects.toBeInstanceOf(Error);
+});
+test('Object user_id', () => {
+    let user_id = {};
+    let task_id = 1;
+    let type = 'single_choice';
+
+    expect(answers_logic.getAllAnswers(user_id, task_id, type)).rejects.toBeInstanceOf(Error);
+});
+
+test('Undefined task_id', async () => {
+    let user_id = 1;
+    let task_id = undefined;
+    let type = 'single_choice';
+
+    let res = await answers_logic.getAllAnswers(user_id, task_id, type);
+    expect(res).toBeInstanceOf(Array);
+    for (let i of res)
+        expect(typeof i).toBe('number');
+});
+test('String task_id', () => {
+    let user_id = 1;
+    let task_id = "a";
+    let type = 'single_choice';
+
+    expect(answers_logic.getAllAnswers(user_id, task_id, type)).rejects.toBeInstanceOf(Error);
+});
+test('Object task_id', () => {
+    let user_id = 1;
+    let task_id = {};
+    let type = 'single_choice';
+
+    expect(answers_logic.getAllAnswers(user_id, task_id, type)).rejects.toBeInstanceOf(Error);
+});
+
+test('Undefined type', async () => {
+    let user_id = 1;
+    let task_id = 1;
+    let type = undefined;
+
+    let res = await answers_logic.getAllAnswers(user_id, task_id, type);
+    expect(res).toBeInstanceOf(Array);
+    for (let i of res)
+        expect(typeof i).toBe('number');
+});
+test('Object type', () => {
+    let user_id = 1;
+    let task_id = 1;
+    let type = {};
+
+    expect(answers_logic.getAllAnswers(user_id, task_id, type)).rejects.toBeInstanceOf(Error);
+});
+test('Wrong type', () => {
+    let user_id = 1;
+    let task_id = 1;
+    let type = 'aaa';
+
+    expect(answers_logic.getAllAnswers(user_id, task_id, type)).rejects.toBeInstanceOf(Error);
+});
+
+test('Correct type parameters', async () => {
+    let user_id = 1;
+    let task_id = 1;
+    let type = 'single_choice';
+
+    let res = await answers_logic.getAllAnswers(user_id, task_id, type);
+    expect(res).toBeInstanceOf(Array);
+    for (let i of res)
+        expect(typeof i).toBe('number');
+});
+
 
 /* API calls test */
 
+/* Answer POST */
 test('Insert a valid answer via API', async () => {
     let api = require('../api');
 
@@ -179,6 +269,6 @@ test('Insert a valid answer via API', async () => {
         expect(text).toContain("duplicate key value violates unique constraint");
     else if (response.status === 201)
         expect(typeof text).toBe('number');
-    
+
     api.close();
 });
