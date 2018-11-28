@@ -7,4 +7,33 @@ router.get('/ta-peer-corrections', (req, res) => {
     res.send("ok");
 });
 
+router.get('/ta-peer-corrections/:ta_peer_correction_id/', (req, res) => {
+    
+    let ta_peer_correction_id = req.params.ta_peer_correction_id;
+    taPeerCorrections_logic.getTaPeerCorrectionById(ta_peer_correction_id)
+    .then(data => res.json(data))
+    .catch(e => {
+        res.status(404).send(e.message);
+        console.log(e.stack);
+    });
+    
+});
+
+router.put('/TA-peer-corrections/:TA-peer-correctionID', (req, res) => {
+    
+    let ta_peer_correction_id = req.params.ta_peer_correction_id;
+    let TaPeerCorrectionObject = req.body.TaPeerCorrection;
+
+    TaPeerCorrectionObject['id'] = ta_peer_correction_id;
+
+    taPeerCorrections_logic.updateTaPeerCorrection(TaPeerCorrectionObject)
+    .then(data => res.json(data))
+    .catch(e => {
+        res.status(404).send(e.message);
+        console.log(e.stack);
+    });
+    
+});
+
+
 module.exports = router;
