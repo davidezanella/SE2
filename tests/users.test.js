@@ -169,6 +169,20 @@ test('Email is Array /users GET', () => {
 
 /* Users GET all */
 test('Get all users via API', async () => {
+    let name = undefined;
+    let surname = undefined;
+    let email = undefined;
+
+    let response = await fetch('http://localhost:3000/v1/answers?name=' + name + '&surname=' + surname + '&email=' + email);
+
+    let json = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(json).toBeInstanceOf(Array);
+    for (let i of json)
+        expect(typeof i).toBe('number');
+});
+test('Get users with filters via API', async () => {
     let name = "andrea";
     let surname = "draane";
     let email = "andre@test.it";
@@ -177,11 +191,10 @@ test('Get all users via API', async () => {
 
     let json = await response.json();
 
-    if (response.status === 200) {
-        expect(json).toBeInstanceOf(Array);
-        for (let i of json)
-            expect(typeof i).toBe('number');
-    }
+    expect(response.status).toBe(200);
+    expect(json).toBeInstanceOf(Array);
+    for (let i of json)
+        expect(typeof i).toBe('number');
 });
 
 
