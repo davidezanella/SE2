@@ -1,4 +1,5 @@
 let tasks_logic = require ("../logic/tasks_logic");
+let fetch = require ("node-fetch");
 
 test("Undefined title",() => {
     let task = {
