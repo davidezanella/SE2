@@ -227,3 +227,56 @@ test("Object choices", () => {
 });
 
 // API test
+let api;
+beforeAll(() => {
+    api = require('../api');
+});
+
+afterAll(() => {
+    api.close();
+});
+
+
+test("Insert valid task via API", async () => {
+    let task = {
+        task_title: "",
+        author_id: 1,
+        question: "",
+        task_type: "open_answer",
+        choices: ["risp1","risp2","risp3"],
+        correct_answer: ["risp1"]
+    };
+
+    let body = { Task: task};
+
+    let response = await fetch ('http://localhost:3000/v1/tasks', {
+        method: 'post',
+        body: JSON.stringify(body),
+        headers: { 'Content-Type': 'application/json' },    
+    });
+
+    let text = await response.text();
+
+    if (response.status === 400)
+        expect(text).toContain("Duplicate key value violates unique constraint");
+    else if (response.status === 201)
+        expect(typeof text).toBe('number');
+    
+
+});
+
+test("Get all tasks via API", async () => {
+    let task_title = "title";
+    let author_id = 1;
+    let task_type = "open_answer";
+
+    let response = await fetch('http://localhost:3000/v1/corrections?task_title=' + task_title + '&author_id=' + author_id + '&task_type=' + task_type);
+    
+    let json = await response.json();
+
+    if (response.status === 200) {
+        expect(json).toBeInstanceOf(Array);
+        for (let i of json)
+            expect(typeof i).toBe('number');
+}
+});
