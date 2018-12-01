@@ -243,6 +243,24 @@ test('Correct type parameters', async () => {
 });
 
 
+/* Answers DELETE */
+
+test('Undefined answer_id', () => {
+    let answer_id = undefined;
+
+    expect(answers_logic.deleteAnAnswer(answer_id)).rejects.toBeInstanceOf(Error);
+});
+test('String answer_id', () => {
+    let answer_id = "a";
+
+    expect(answers_logic.deleteAnAnswer(answer_id)).rejects.toBeInstanceOf(Error);
+});
+test('Object answer_id', () => {
+    let answer_id = {};
+
+    expect(answers_logic.deleteAnAnswer(answer_id)).rejects.toBeInstanceOf(Error);
+});
+
 /* API calls test */
 let api;
 beforeAll(() => {
@@ -254,8 +272,34 @@ afterAll(() => {
 });
 
 /* Answer POST */
+async function insertAnswer(answer) {
+    let response = await fetch('http://localhost:3000/v1/answers', {
+        method: 'post',
+        body: JSON.stringify(answer),
+        headers: { 'Content-Type': 'application/json' },
+    });
 
-test('Insert a valid answer via API', async () => {
+    let id = await response.text();
+
+    return id;
+}
+
+/* Answer DELETE */
+async function deleteAnswer(answer_id) {
+    await fetch('http://localhost:3000/v1/answers/' + answer_id, {
+        method: 'delete'
+    });
+}
+
+/* Answers GET all */
+async function getAllAnswers(user_id, task_id, type) {
+    let response = await fetch('http://localhost:3000/v1/answers?user_id=' + user_id + '&task_id=' + task_id + '&type=' + type);
+
+    let json = await response.json();
+    return json;
+}
+
+test('Insert a valid answer via API and DELETE', async () => {
     let answer = {
         user_id: 1,
         task_id: 1,
@@ -264,34 +308,24 @@ test('Insert a valid answer via API', async () => {
 
     let body = { Answer: answer };
 
-    let response = await fetch('http://localhost:3000/v1/answers', {
-        method: 'post',
-        body: JSON.stringify(body),
-        headers: { 'Content-Type': 'application/json' },
-    });
+    try {
+        let id = await insertAnswer(body);
 
-    let text = await response.text();
-
-    if (response.status === 400)
-        expect(text).toContain("duplicate key value violates unique constraint");
-    else if (response.status === 201)
-        expect(typeof text).toBe('number');
+        await deleteAnswer(id);
+    }
+    catch (e) {
+        expect(e).toContain("duplicate key value violates unique constraint");
+    }
 });
 
-
-/* Answers GET all */
 test('Get all answers via API', async () => {
     let user_id = 1;
     let task_id = 1;
     let type = 'single_choice';
 
-    let response = await fetch('http://localhost:3000/v1/answers?user_id=' + user_id + '&task_id=' + task_id + '&type=' + type);
+    let json = await getAllAnswers(user_id, task_id, type);
 
-    let json = await response.json();
-
-    if (response.status === 200) {
-        expect(json).toBeInstanceOf(Array);
-        for (let i of json)
-            expect(typeof i).toBe('number');
-    }
+    expect(json).toBeInstanceOf(Array);
+    for (let i of json)
+        expect(typeof i).toBe('number');
 });
