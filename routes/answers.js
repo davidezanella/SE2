@@ -17,7 +17,7 @@ router.get('/answers', (req, res) => {
 });
 
 router.post('/answers', (req, res) => {
-    let answer = req.body.Answer;
+    let answer = req.body;
 
     answers_logic.insertAnAnswer(answer)
         .then(data => res.status(201).json(data))

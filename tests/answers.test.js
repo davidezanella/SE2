@@ -300,13 +300,11 @@ async function getAllAnswers(user_id, task_id, type) {
 }
 
 test('Insert a valid answer via API and DELETE', async () => {
-    let answer = {
+    let body = {
         user_id: 1,
         task_id: 1,
         answers: ['a', 'c']
     };
-
-    let body = { Answer: answer };
 
     try {
         let id = await insertAnswer(body);
