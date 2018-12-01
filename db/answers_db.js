@@ -17,6 +17,10 @@ let answers_db = {
             await db.executeQuery('INSERT INTO answer_answers (answer_id, answer) VALUES ($1, $2)', [answer_id, answ]);
         
         return answer_id;
+    },
+    deleteAnswer: async function(answer_id){
+        await db.executeQuery('DELETE FROM answer_answers WHERE answer_id = $1', [answer_id]);
+        await db.executeQuery('DELETE FROM WHERE id = $1', [answer_id]);
     }
 };
 

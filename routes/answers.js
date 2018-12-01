@@ -27,5 +27,15 @@ router.post('/answers', (req, res) => {
         });
 });
 
+router.delete('/answers/:id', (req, res) => {
+    let answer_id = req.params.id;
+    answers_logic.deleteAnAnswer(answer_id)
+        .then(() => res.sendStatus(204))
+        .catch(e => {
+            res.status(404).send(e.message);
+            console.log(e.stack);
+        });
+});
+
 
 module.exports = router;

@@ -39,6 +39,12 @@ let answers = {
             throw new Error("Invalid task type filter parameter!");
 
         return await answers_db.getAllAnswers(user_id, task_id, type);
+    },
+    deleteAnAnswer: async function(answer_id){
+        if (!isNumber(answer_id))
+            throw new Error("Invalid answer id!");
+        
+        await answers_db.deleteAnswer(answer_id);
     }
 };
 
