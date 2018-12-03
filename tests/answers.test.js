@@ -261,6 +261,26 @@ test('Object answer_id', () => {
     expect(answers_logic.deleteAnAnswer(answer_id)).rejects.toBeInstanceOf(Error);
 });
 
+
+/* Answer GET */
+
+test('Undefined answer_id', () => {
+    let answer_id = undefined;
+
+    expect(answers_logic.getAnAnswer(answer_id)).rejects.toBeInstanceOf(Error);
+});
+test('String answer_id', () => {
+    let answer_id = "a";
+
+    expect(answers_logic.getAnAnswer(answer_id)).rejects.toBeInstanceOf(Error);
+});
+test('Object answer_id', () => {
+    let answer_id = {};
+
+    expect(answers_logic.getAnAnswer(answer_id)).rejects.toBeInstanceOf(Error);
+});
+
+
 /* API calls test */
 let api;
 beforeAll(() => {
@@ -299,6 +319,14 @@ async function getAllAnswers(user_id, task_id, type) {
     return json;
 }
 
+/* Answer GET */
+async function getAnAnswer(answer_id) {
+    let response = await fetch('http://localhost:3000/v1/answers/' + answer_id);
+
+    let json = await response.json();
+    return json;
+}
+
 test('Insert a valid answer via API and DELETE', async () => {
     let body = {
         user_id: 1,
@@ -324,6 +352,16 @@ test('Get all answers via API', async () => {
     let json = await getAllAnswers(user_id, task_id, type);
 
     expect(json).toBeInstanceOf(Array);
-    for (let i of json)
+    for (let i of json) {
         expect(typeof i).toBe('number');
+
+        let answer = await getAnAnswer(i);
+
+        expect(typeof answer.id).toBe('number');
+        expect(typeof answer.user_id).toBe('number');
+        expect(typeof answer.task_id).toBe('number');
+        expect(answer.answers).toBeInstanceOf(Array);
+        for (let s of answer.answers) 
+            expect(typeof s).toBe('string');
+    }
 });
