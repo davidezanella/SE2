@@ -17,10 +17,10 @@ router.get('/users', (req, res) => {
 });
 
 router.post('/users', (req, res) => {
-  let username = req.query.username;
-  let name = req.query.name;
-  let surname = req.query.surname;
-  let email = req.query.email;
+  let username = req.body.username;
+  let name = req.body.name;
+  let surname = req.body.surname;
+  let email = req.body.email;
 
   users_logic.createNewUser(username, name, surname, email)
       .then(data => res.status(201).json(data))
