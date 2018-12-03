@@ -309,7 +309,7 @@ test('Insert a valid user via API', async () => {
   });
 
   let text = await response.text();
-
-  if (response.status === 201)
-    expect(typeof text).toBeInstanceOf('number');
+  
+  expect(response.status).toBe(201);
+  expect(!isNaN(text)).toBe(true);
 });
