@@ -40,6 +40,12 @@ let answers = {
 
         return await answers_db.getAllAnswers(user_id, task_id, type);
     },
+    getAnAnswer: async function(answer_id){
+        if (!isNumber(answer_id))
+            throw new Error("Invalid answer id!");
+    
+        return await answers_db.getAnAnswer(answer_id);
+    },
     deleteAnAnswer: async function(answer_id){
         if (!isNumber(answer_id))
             throw new Error("Invalid answer id!");

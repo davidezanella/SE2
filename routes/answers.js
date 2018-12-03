@@ -16,6 +16,16 @@ router.get('/answers', (req, res) => {
         });
 });
 
+router.get('/answers/:id', (req, res) => {
+    let answer_id = req.params.id;
+    answers_logic.getAnAnswer(answer_id)
+        .then((data) => res.status(200).json(data))
+        .catch(e => {
+            res.sendStatus(404);
+            console.log(e.stack);
+        });
+});
+
 router.post('/answers', (req, res) => {
     let answer = req.body;
 
