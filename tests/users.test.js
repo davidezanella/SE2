@@ -313,3 +313,20 @@ test('Insert a valid user via API', async () => {
   expect(response.status).toBe(201);
   expect(!isNaN(text)).toBe(true);
 });
+
+test('Insert a NON valid user via API', async () => {
+  let body = {
+    username: null,
+    name: "andrea",
+    surname: "dalla costa",
+    email: "andrea@test.me"
+   };
+
+  let response = await fetch('http://localhost:3000/v1/users', {
+      method: 'post',
+      body: JSON.stringify(body),
+      headers: { 'Content-Type': 'application/json' },
+  });
+
+  expect(response.status).toBe(400);
+});
