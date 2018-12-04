@@ -1,6 +1,7 @@
 let corrections_logic = require('../logic/corrections_logic');
 let fetch = require('node-fetch');
 
+/*insert a correction */
 test("Undefined correction", () => {
     let correction = undefined;
     expect(corrections_logic.insertACorrection(correction)).rejects.toBeInstanceOf(Error);
@@ -194,7 +195,7 @@ test("Insert a valid correction", async () => {
 });
 
 
-
+/* get all corrections */
 test("Object answer_id in the filter", () => {
     let answer_id = {};
     let user_id = 1;
@@ -248,6 +249,7 @@ test("Insert valid filters", async () => {
 
 });
 
+/*delete a correction */
 test("Undefined correction_id", () => {
     let correction_id = undefined;
     expect(corrections_logic.deleteACorrection(correction_id)).rejects.toBeInstanceOf(Error);
@@ -272,6 +274,30 @@ test("Array correction_id", () => {
 
 });
 
+/* get a correction */
+test("Undefined correction_id", () => {
+    let correction_id = undefined;
+    expect(corrections_logic.getACorrection(correction_id)).rejects.toBeInstanceOf(Error);
+
+});
+
+test("String correction_id", () => {
+    let correction_id = "c";
+    expect(corrections_logic.getACorrection(correction_id)).rejects.toBeInstanceOf(Error);
+
+});
+
+test("Object correction_id", () => {
+    let correction_id = {};
+    expect(corrections_logic.getACorrection(correction_id)).rejects.toBeInstanceOf(Error);
+
+});
+
+test("Array correction_id", () => {
+    let correction_id = [2];
+    expect(corrections_logic.getACorrection(correction_id)).rejects.toBeInstanceOf(Error);
+
+});
 
 /*API calls test */
 
@@ -294,7 +320,24 @@ async function getAllCorrections(answer_id, user_id) {
     });
     let getAll_json = await getAll_result.json();
     return getAll_json;
-}
+};
+
+async function getACorrection(correction_id) {
+    let result = await fetch('http://localhost:3000/v1/corrections/' + correction_id, {
+        method: 'get',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    if (result.status === 200) {
+        let json = await result.json();
+        return json;
+    }
+    else if (result.status === 404) {
+        return null;
+    }
+};
 
 async function insertACorrection(correction) {
     let body = { Correction: correction }
@@ -349,3 +392,24 @@ test("Get all corrections via API", async () => {
         expect(typeof i).toBe('number');
 
 });
+
+test("Get an existent correction via API", async () => {
+    let correction_id = 199;
+
+    let res = await getACorrection(correction_id);
+    console.log("test json: " + res);
+    expect(typeof res).toBe('object');
+    expect(typeof res.id).toBe('number');
+    expect(typeof res.answer_id).toBe('number');
+    expect(typeof res.text).toBe('string');
+    expect(typeof res.score).toBe('number');
+    expect(typeof res.user_id).toBe('number');
+
+});
+
+test("Get an inexistent correction via API", async () => {
+    let correction_id = 19;
+    let res = await getACorrection(correction_id);
+    expect(res).toBe(null);
+
+})
