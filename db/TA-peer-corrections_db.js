@@ -23,7 +23,7 @@ let taPeerCorrections_db = {
     updateTaPeerCorrection: async function (taPeerCorrection) {
         // Update a ta peer correction given an object taPeerCorrection.
         let res = await db.executeQuery(
-            'UPDATE taPeerCorrections SET peer_correction_id = $1, answer_id = $2, text = $3, user_id = $4 WHERE id = $5',
+            'UPDATE taPeerCorrections SET peer_correction_id = $1, answer_id = $2, text = $3, user_id = $4 WHERE id = $5 RETURNING id',
             [taPeerCorrection.peer_correction_id, taPeerCorrection.answer_id, taPeerCorrection.text, taPeerCorrection.user_id, taPeerCorrection.id]
         );
         return res.rows[0].id;

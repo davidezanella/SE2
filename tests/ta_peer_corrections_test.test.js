@@ -1,6 +1,10 @@
 let taPeerCorrections = require('../logic/TA-peer-corrections_logic');
 let fetch = require('node-fetch');
 const isNumber = require('is-number');
+let db = require ("../db/db");
+let user_logic = require("../logic/users_logic");
+let answer_logic = require("../logic/answers_logic");
+let task_logic = require("../logic/tasks_logic");
 
 // GET test for TA peer correction
 
@@ -59,7 +63,35 @@ test('function ta peer correction id', () => {
 
 /* Valid ta peer correction ID */
 test('valid ta peer correction id', async () => {
-    let ta_peer_correction_id = 1;
+
+    jest.setTimeout(30000);
+    // Before inserting a ta peer correction, we first need a user, a peer correction, a task, an answer.
+    var user_id = await user_logic.createNewUser("test_username", "test_name", "test_surname", "email@test.com");
+    var task_id = await task_logic.insertTask({
+        "task_title": "A very easy question about History",
+        "author_id": user_id,
+        "question": "Qual e' il colore del cavallo bianco di Napoleone",
+        "task_type": "single_choice",
+        "choices": ["Bianco", "Rosso", "Marrone"],
+        "correct_answer": ["Bianco"]
+    });
+    // Actually there would be even the answeranswer, but they aren't necessary to test the TA peer corrections.
+    var answer_id = await answer_logic.insertAnAnswer({
+        "user_id": user_id,
+        "task_id": task_id,
+        "answers": ["Bianco"]
+    });
+    // Still not implemented! To be substituted when needed!
+    var peer_correction_id = await db.executeQuery("INSERT INTO peercorrections (answer_id, text, user_id) VALUES ($1, 'The answer is correct', $2) RETURNING ID;", [answer_id, user_id]);
+    peer_correction_id = peer_correction_id.rows[0].id;
+    // We keep the same user just not to be forced to create another one.
+    var peer_review_correction_text = "The peer review is correct.";
+    let ta_peer_correction_id = await taPeerCorrections.insertTaPeerCorrection({
+        "peer_correction_id": peer_correction_id,
+        "answer_id": answer_id,
+        "text": peer_review_correction_text,
+        "user_id": user_id
+    });
     let data;
     let exception = false;
     try {
@@ -67,20 +99,29 @@ test('valid ta peer correction id', async () => {
     }
     catch (e) {
         exception = true;
-        // Message for id doesn't exist.
-        //expect(e.detail).toBe("");
     }
-    //console.log(data);
-    /*
-        expect(isNumber(data['id'])).toBe(true);
-        expect(isNumber(data['peer_correction_id'])).toBe(true);
-        expect(isNumber(data['answer_id'])).toBe(true);
-        expect(typeof data['text']).toBe('string');
-        expect(isNumber(data['user_id'])).toBe(true);
-
-        id, peer_correction_id, answer_id, text, user_id
-    */
+    
     expect(typeof data).toBe('object');
+    expect(isNumber(data['id'])).toBeTruthy();
+    expect(isNumber(data['peer_correction_id'])).toBe(true);
+    expect(data['peer_correction_id']).toEqual(peer_correction_id);
+    expect(isNumber(data['answer_id'])).toBe(true);
+    expect(data['answer_id']).toEqual(answer_id);
+    
+    expect(typeof data['text']).toBe("string");
+    expect(data['text']).toEqual(peer_review_correction_text)
+    
+    expect(isNumber(data['user_id'])).toBe(true);
+    expect(data['user_id']).toBe(user_id);
+    
+    await taPeerCorrections.deleteTaPeerCorrection(ta_peer_correction_id);
+    // Gives error, why??
+    await db.executeQuery("DELETE FROM peercorrections WHERE id = $1", [peer_correction_id]);
+    
+    await answer_logic.deleteAnAnswer(answer_id);
+    
+    await task_logic.deleteATask(task_id);
+    await user_logic.deleteUser(user_id);
 });
 
 
@@ -640,22 +681,59 @@ test('Absent id in a non empty object', () => {
 
 // Test response to a valid request:
 test('valid ta peer correction id', async () => {
-    let TaPeerCorrection = {
-        'peer_correction_id': 1,
-        'answer_id': 1,
-        'user_id': 1,
-        'id': 1
-    };
-    let res;
-    let exception = false;
+    jest.setTimeout(30000);
+    // Before inserting a ta peer correction, we first need a user, a peer correction, a task, an answer.
+    var user_id = await user_logic.createNewUser("test_username", "test_name", "test_surname", "email@test.com");
+    var task_id = await task_logic.insertTask({
+        "task_title": "A very easy question about History",
+        "author_id": user_id,
+        "question": "Qual e' il colore del cavallo bianco di Napoleone",
+        "task_type": "single_choice",
+        "choices": ["Bianco", "Rosso", "Marrone"],
+        "correct_answer": ["Bianco"]
+    });
+    // Actually there would be even the answeranswer, but they aren't necessary to test the TA peer corrections.
+    var answer_id = await answer_logic.insertAnAnswer({
+        "user_id": user_id,
+        "task_id": task_id,
+        "answers": ["Bianco"]
+    });
+    // Still not implemented! To be substituted when needed!
+    var peer_correction_id = await db.executeQuery("INSERT INTO peercorrections (answer_id, text, user_id) VALUES ($1, 'The answer is correct', $2) RETURNING ID;", [answer_id, user_id]);
+    peer_correction_id = peer_correction_id.rows[0].id;
+    // We keep the same user just not to be forced to create another one.
+    var peer_review_correction_text = "The peer review is correct.";
+    let ta_peer_correction_id = await taPeerCorrections.insertTaPeerCorrection({
+        "peer_correction_id": peer_correction_id,
+        "answer_id": answer_id,
+        "text": peer_review_correction_text,
+        "user_id": user_id
+    });
+    // Updated taPeerCorrection
+    var updated_text = "La risposta e' sbagliata";
+    var TaPeerCorrection = {
+        "peer_correction_id": peer_correction_id,
+        "answer_id": answer_id,
+        "text": updated_text,
+        "user_id": user_id,
+        "id": ta_peer_correction_id
+    }
+    var returning_id;
     try {
-        res = await taPeerCorrections.updateTaPeerCorrection(TaPeerCorrection);
+        returning_id = await taPeerCorrections.updateTaPeerCorrection(TaPeerCorrection);
     }
     catch (e) {
         exception = true;
-        // Message for id doesn't exist.
-        //expect(e.detail).toBe("");
     }
+    expect(isNumber(returning_id)).toBeTruthy();
 
-    expect(typeof res).toBe('number');
+    // cleans test entries in the db
+    await taPeerCorrections.deleteTaPeerCorrection(ta_peer_correction_id);
+    await db.executeQuery("DELETE FROM peercorrections WHERE id = $1", [peer_correction_id]);
+    
+    await answer_logic.deleteAnAnswer(answer_id);
+    
+    await task_logic.deleteATask(task_id);
+    await user_logic.deleteUser(user_id);
+
 });
