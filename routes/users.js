@@ -8,7 +8,7 @@ router.get('/users', (req, res) => {
   let surname = req.query.surname;
   let email = req.query.email;
 
-  user_logic.getAllUsers(name, surname, email)
+  users_logic.getAllUsers(name, surname, email)
     .then(data => res.json(data))
     .catch(e => {
       res.status(404).send(e.message);
@@ -22,7 +22,7 @@ router.post('/users', (req, res) => {
   let surname = req.query.surname;
   let email = req.query.email;
 
-  user_logic.createNewUser(username, name, surname, email)
+  users_logic.createNewUser(username, name, surname, email)
       .then(data => res.status(201).json(data))
       .catch(e => {
           res.status(400).send(e.message);
