@@ -227,6 +227,23 @@ test("Object choices", () => {
     expect(tasks_logic.insertTask(task)).rejects.toBeInstanceOf(Error);
 });
 
+// Check params of the delete
+test("Object task id", () => {
+    let task_id={};
+    expect(tasks_logic.deleteATask(task_id)).rejects.toBeInstanceOf(Error);
+});
+
+test('Undefined task_id', () => {
+    let task_id = undefined;
+    expect(tasks_logic.deleteATask(task_id)).rejects.toBeInstanceOf(Error);
+});
+
+test('String answer_id', () => {
+    let task_id = "a";
+    expect(tasks_logic.deleteATask(task_id)).rejects.toBeInstanceOf(Error);
+});
+
+
 // API test
 let api;
 beforeAll(() => {
