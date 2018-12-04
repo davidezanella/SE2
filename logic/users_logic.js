@@ -1,4 +1,5 @@
 let users_db = require('../db/users_db');
+const isNumber = require('is-number');
 let isString = function(s) {
   if (typeof s === 'string' || s instanceof String)
     return true;
@@ -21,6 +22,12 @@ let users = {
           throw new Error("Invalid type of the email filter parameter!");
 
       return await users_db.getAllUsers(name, surname, email);
+  },
+  getUserById: async function(id){
+    if (!isNumber(id) || id % 1 !== 0 && id >= 0){
+        throw new Error("The id must be a posotove integer value.");
+    }
+    return await users_db.getUserById(id);
   },
   createNewUser: async function(username, name, surname, email) {
     if (!isString(username))
