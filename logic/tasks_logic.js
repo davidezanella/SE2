@@ -49,25 +49,26 @@ let tasks = {
 
 
     getAllTasks: async function (task_title, author_id, task_type) {
-        if (!isString(task.task_title))
-            throw new Error("Title is not valid!");
-        if (!isNumber(task.author_id))
-            throw new Error("Author ID is not valid!");
-
-        let tmp = false;
-        for(let i=0; i<types.length; i++){
-            if (task.task_type === types[i]) 
-                tmp = true;
-            }
-        if(!tmp) throw new Error("Task type is not valid!");
-
-
         if (task_title == undefined || task_title == null)
-            task_title = '%';
+            task_title = '%'
+        else
+            if (!isString(task_title)) throw new Error("Title is not valid!");
+
         if (author_id == undefined || author_id == null)
-            author_id = '%';
+            author_id = '%'
+        else 
+            if (!isNumber(author_id)) throw new Error("Author ID is not valid!");    
+
         if (task_type == undefined || task_type == null)
-            task_type = '%';
+            task_type = '%'
+        else{
+            let tmp = false;
+            for(let i=0; i<types.length; i++){
+                if (task_type === types[i]) 
+                    tmp = true;
+            }
+            if(!tmp) throw new Error("Task type is not valid!");
+        }
         return tasks_db.getAllTasks(task_title, author_id, task_type);
     }
 };
