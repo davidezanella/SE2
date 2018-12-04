@@ -267,7 +267,7 @@ async function insertATask(task) {
 }
 
 async function getAllTasks(task_title, author_id, task_type) {
-    let response = await fetch('http://localhost:3000/v1/corrections?task_title=' + task_title + '&author_id=' + author_id + '&task_type=' + task_type);
+    let response = await fetch('http://localhost:3000/v1/tasks?title=' + task_title + '&author=' + author_id + '&type=' + task_type);
 
     let res = await response.json();
     return res;
@@ -275,15 +275,12 @@ async function getAllTasks(task_title, author_id, task_type) {
 
 async function getATask(task_id) {
     let response = await fetch('http://localhost:3000/v1/tasks/' + task_id);
-
     let res = await response.json();
     return res;
 }
 
 async function deleteATask(task_id) {
-    await fetch('http://localhost:3000/v1/answers/' + task_id, {
-        method: 'delete'
-    });
+    await fetch('http://localhost:3000/v1/tasks/' + task_id, { method: 'delete' });
 }
 
 
@@ -304,7 +301,20 @@ test("Delete a task via API", async () => {
     try { await deleteATask(task_id); } catch (e) { expect(e).toBeInstanceOf(Error); }
 });
 
-test("Get a task via API", async () => {
-    let task_id = 1;
-    try { await getATask(task_id); } catch (e) { expect(e).toBeInstanceOf(Error); }
+test("Get tasks via API", async () => {
+    let task_title = "Title";
+    let author_id = 1;
+    let task_type = 'open_answer';
+
+    let allTasks = await getAllTasks(task_title, author_id, task_type);
+
+    expect(allTasks).toBeInstanceOf(Array);
+
+    for (let count of allTasks) {
+        expect(typeof count).toBe('number');
+        let task = await getATask(count);
+        expect(typeof task.id).toBe('number');
+        expect(typeof task.title).toBe('string');
+        expect(typeof task.question).toBe('string');
+    }
 });

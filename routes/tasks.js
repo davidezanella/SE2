@@ -28,4 +28,10 @@ router.delete('/tasks/:id', (req, res) => {
     tasks_logic.deleteATask(task_id).then(() => res.sendStatus(204)).catch(e => {res.status(404);});
 });
 
+router.get('/tasks/:id', (req, res) => {
+    let task_id = req.params.id;
+    //console.log(task_id);
+    tasks_logic.getATask(task_id).then((data) => res.status(200).json(data)).catch(e => { res.sendStatus(404);});
+});
+
 module.exports = router;
