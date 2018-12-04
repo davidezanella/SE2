@@ -296,6 +296,68 @@ test("Get user by id, with a valid id, returna a valid user object.", async() =>
         
 });
 
+/*
+############### 
+  DELETE user 
+###############
+*/
+
+test("delete a user with id null", async () => {
+  var id = null;
+  expect(users_logic.deleteUser(id)).rejects.toBeInstanceOf(Error);
+});
+test("delete a user with id undefined", async () => {
+  var id = undefined;
+  expect(users_logic.deleteUser(id)).rejects.toBeInstanceOf(Error);
+});
+test("delete a user with id < 0", async () => {
+  var id = -1;
+  expect(users_logic.deleteUser(id)).rejects.toBeInstanceOf(Error);
+});
+test("delete a user with id NaN", async () => {
+  var id = NaN;
+  expect(users_logic.deleteUser(id)).rejects.toBeInstanceOf(Error);
+});
+test("delete a user with id decimal", async () => {
+  var id = 0.5;
+  expect(users_logic.deleteUser(id)).rejects.toBeInstanceOf(Error);
+});
+test("delete a user with id empty string", async () => {
+  var id = "";
+  expect(users_logic.deleteUser(id)).rejects.toBeInstanceOf(Error);
+});
+test("delete a user with id non empty string", async () => {
+  var id = "ciao";
+  expect(users_logic.deleteUser(id)).rejects.toBeInstanceOf(Error);
+});
+test("delete a user with id empty list", async () => {
+  var id = [];
+  expect(users_logic.deleteUser(id)).rejects.toBeInstanceOf(Error);
+});
+test("delete a user with id empty object", async () => {
+  var id = {};
+  expect(users_logic.deleteUser(id)).rejects.toBeInstanceOf(Error);
+});
+test("delete a user with id non empty object", async () => {
+  var id = {"a": 1};
+  expect(users_logic.deleteUser(id)).rejects.toBeInstanceOf(Error);
+});
+test("delete a user with id Infinity", async () => {
+  var id = Infinity;
+  expect(users_logic.deleteUser(id)).rejects.toBeInstanceOf(Error);
+});
+test("delete a user with id - Infinity", async () => {
+  var id = - Infinity;
+  expect(users_logic.deleteUser(id)).rejects.toBeInstanceOf(Error);
+});
+
+// DELETE a successfully inserted user:
+test("Delete a successfully inserted user", async () => {
+  var id = await users_logic.createNewUser("test_username", "test_name", "test_surname", "test@testemail.com");
+  await users_logic.deleteUser(id);
+  expect(users_logic.getUserById(id)).toBeTruthy();
+});
+
 /* /users POST */
 test('All params /users POST', async () => {
   let username = "draane";

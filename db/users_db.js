@@ -19,9 +19,10 @@ let users_db = {
         return user_id;
     },
     deleteUser: async function(id){
+        // When the user is successfully deleted it returns true.
         let response_message = await db.executeQuery("DELETE FROM users WHERE id=$1", [id]);
         console.log(response_message);
-        return ;
+        return true;
     }
 };
 
