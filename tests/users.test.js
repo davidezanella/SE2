@@ -1,5 +1,7 @@
 let users_logic = require('../logic/users_logic');
 let fetch = require('node-fetch');
+let emailValidator = require('email-validator');
+let db = require("../db/db")
 
 /* API calls test */
 let api;
@@ -197,6 +199,102 @@ test('Get users with filters via API', async () => {
         expect(typeof i).toBe('number');
 });
 
+
+// Get user by id
+test("Get by id, id is null", async () => {
+  var id = null;
+  expect(users_logic.getUserById(id)).rejects.toBeInstanceOf(Error);
+});
+test("Get by id, id is undefined", async () => {
+  var id = undefined;
+  expect(users_logic.getUserById(id)).rejects.toBeInstanceOf(Error);
+});
+test("Get by id, id is NaN", async () => {
+  var id = NaN;
+  expect(users_logic.getUserById(id)).rejects.toBeInstanceOf(Error);
+});
+test("Get by id, id is < 0", async () => {
+  var id = -1;
+  expect(users_logic.getUserById(id)).rejects.toBeInstanceOf(Error);
+});
+test("Get by id, id is decimal", async () => {
+  var id = 0.5;
+  expect(users_logic.getUserById(id)).rejects.toBeInstanceOf(Error);
+});
+test("Get by id, id is a non empty string", async () => {
+  var id = "ciao";
+  expect(users_logic.getUserById(id)).rejects.toBeInstanceOf(Error);
+});
+test("Get by id, id is an empty string", async () => {
+  var id = "";
+  expect(users_logic.getUserById(id)).rejects.toBeInstanceOf(Error);
+});
+test("Get by id, id is a non empty list", async () => {
+  var id = [1];
+  expect(users_logic.getUserById(id)).rejects.toBeInstanceOf(Error);
+});
+test("Get by id, id is an empty list", async () => {
+  var id = [];
+  expect(users_logic.getUserById(id)).rejects.toBeInstanceOf(Error);
+});
+test("Get by id, id is a non empty object", async () => {
+  var id = {"a": 1};
+  expect(users_logic.getUserById(id)).rejects.toBeInstanceOf(Error);
+});
+test("Get by id, id is an empty object", async () => {
+  var id = {};
+  expect(users_logic.getUserById(id)).rejects.toBeInstanceOf(Error);
+});
+test("Get by id, id is Infinity", async () => {
+  var id = Infinity;
+  expect(users_logic.getUserById(id)).rejects.toBeInstanceOf(Error);
+});
+test("Get by id, id is - infinity", async () => {
+  var id = - Infinity;
+  expect(users_logic.getUserById(id)).rejects.toBeInstanceOf(Error);
+});
+
+/*
+ Valid getUserById: when the id is a positive int, returns a user object 
+ {
+   id: number
+   surname: string
+   email: email string
+   name: string
+ }
+
+*/
+
+test("Get user by id, with a valid id, returna a valid user object.", async() => {
+  var id = await users_logic.createNewUser("test_username", "test_name", "test_surname", "test.email@test.com");
+  
+  var user = await users_logic.getUserById(id);
+  // test id
+  expect(user.id).not.toBeNaN();
+  expect(user.id).not.toBeNull();
+  expect(user.id).not.toBeUndefined();
+  expect(typeof user.id).toBe('number');
+  expect(user.id).toBeGreaterThanOrEqual(0);
+  // test username
+  expect(user.username).not.toBeNull();
+  expect(user.username).not.toBeUndefined();
+  expect(typeof user.username).toBe('string');
+  // test name
+  expect(user.name).not.toBeNull();
+  expect(user.name).not.toBeUndefined();
+  expect(typeof user.name).toBe('string');
+  // test surname
+  expect(user.surname).not.toBeNull();
+  expect(user.surname).not.toBeUndefined();
+  expect(typeof user.surname).toBe('string');
+  // test email
+  expect(user.email).not.toBeNull();
+  expect(user.email).not.toBeUndefined();
+  expect(typeof user.email).toBe('string');
+  expect(emailValidator.validate(user.email)).toBe(true);
+  await db.executeQuery('DELETE FROM users WHERE id = $1', [id]);
+        
+});
 
 /* /users POST */
 test('All params /users POST', async () => {
