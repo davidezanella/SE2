@@ -4,11 +4,7 @@
   "description": "",
   "main": "api.js",
   "scripts": {
-    "test": "jest",
-    "jest": {
-      "verbose": true,
-      "collectCoverage": true
-    },
+    "test": "jest --detectOpenHandles --runInBand",
     "start": "node api.js"
   },
   "repository": {
@@ -25,10 +21,15 @@
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "is-number": "^7.0.0",
+    "is-string": "^1.0.4",
     "node-fetch": "^2.3.0",
     "pg": "^7.6.1"
   },
   "devDependencies": {
     "jest": "^23.6.0"
+  },
+  "jest": {
+    "verbose": true,
+    "collectCoverage": true
   }
 }
