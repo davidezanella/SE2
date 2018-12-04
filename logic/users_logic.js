@@ -24,8 +24,8 @@ let users = {
       return await users_db.getAllUsers(name, surname, email);
   },
   getUserById: async function(id){
-    if (!isNumber(id) || id % 1 !== 0 && id >= 0){
-        throw new Error("The id must be a posotove integer value.");
+    if (!isNumber(id) || id % 1 !== 0 || id < 0){
+        throw new Error("The id must be a positive integer value.");
     }
     return await users_db.getUserById(id);
   },
