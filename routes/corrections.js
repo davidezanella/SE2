@@ -10,9 +10,20 @@ router.get('/corrections', (req, res) => {
         .then(data => res.json(data))
         .catch(e => {
             res.status(404).send(e.message);
-            console.error(e.stack);
+
         });
 
+});
+
+router.get('/corrections/:id', (req, res) => {
+    let correction_id = req.params.id;
+
+    corrections_logic.getACorrection(correction_id)
+        .then(data => res.json(data))
+        .catch(e => {
+            res.status(404).send(e.message);
+
+        })
 });
 
 router.post('/corrections', (req, res) => {
@@ -23,14 +34,14 @@ router.post('/corrections', (req, res) => {
         .then(data => res.status(201).json(data))
         .catch(e => {
             res.status(400).send(e.message);
-            console.error(e.stack);
+
         });
 
 });
 
 router.delete('/corrections/:id', (req, res) => {
     let correction_id = req.params.id;
-   
+
     corrections_logic.deleteACorrection(correction_id)
         .then(data => res.sendStatus(204))
         .catch(e => {
