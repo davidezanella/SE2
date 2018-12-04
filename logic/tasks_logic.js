@@ -70,7 +70,14 @@ let tasks = {
             if(!tmp) throw new Error("Task type is not valid!");
         }
         return tasks_db.getAllTasks(task_title, author_id, task_type);
+    },
+
+    deleteATask: async function(task_id) {
+        if (!isNumber(task_id))
+            throw new Error("Invalid task id!");
+        await tasks_db.deleteTask(task_id);
     }
+
 };
 
 module.exports = tasks;

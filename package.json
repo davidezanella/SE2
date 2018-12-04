@@ -1,7 +1,7 @@
 {
   "name": "se2",
   "version": "1.0.0",
-  "description": "",
+  "description": "### Students: * Davide Zanella * Anna Pedrotti * Stefano Huber * Andrea Dalla Costa * Sabrina Alexandra Rosso",
   "main": "api.js",
   "scripts": {
     "test": "jest --detectOpenHandles --runInBand",
@@ -31,5 +31,8 @@
   "jest": {
     "verbose": true,
     "collectCoverage": true
+  },
+  "directories": {
+    "test": "tests"
   }
 }

@@ -227,6 +227,23 @@ test("Object choices", () => {
     expect(tasks_logic.insertTask(task)).rejects.toBeInstanceOf(Error);
 });
 
+// Check params of the delete
+test("Object task id", () => {
+    let task_id={};
+    expect(tasks_logic.deleteATask(task_id)).rejects.toBeInstanceOf(Error);
+});
+
+test('Undefined task_id', () => {
+    let task_id = undefined;
+    expect(tasks_logic.deleteATask(task_id)).rejects.toBeInstanceOf(Error);
+});
+
+test('String answer_id', () => {
+    let task_id = "a";
+    expect(tasks_logic.deleteATask(task_id)).rejects.toBeInstanceOf(Error);
+});
+
+
 // API test
 let api;
 beforeAll(() => {
@@ -236,6 +253,38 @@ beforeAll(() => {
 afterAll(() => {
     api.close();
 });
+
+async function insertATask(task) {
+    let response = await fetch ('http://localhost:3000/v1/tasks', {
+        method: 'post',
+        body: JSON.stringify(body),
+        headers: { 'Content-Type': 'application/json' },    
+    });
+
+    let text = await response.text();
+
+    return text;
+}
+
+async function getAllTasks(task_title, author_id, task_type) {
+    let response = await fetch('http://localhost:3000/v1/corrections?task_title=' + task_title + '&author_id=' + author_id + '&task_type=' + task_type);
+
+    let res = await response.json();
+    return res;
+}
+
+async function getATask(task_id) {
+    let response = await fetch('http://localhost:3000/v1/tasks/' + task_id);
+
+    let res = await response.json();
+    return res;
+}
+
+async function deleteATask(task_id) {
+    await fetch('http://localhost:3000/v1/answers/' + task_id, {
+        method: 'delete'
+    });
+}
 
 
 test("Insert valid task via API", async () => {
@@ -247,37 +296,15 @@ test("Insert valid task via API", async () => {
         choices: ["risp1","risp2","risp3"],
         correct_answer: ["risp1"]
     };
-
-    let body = { Task: task};
-
-    let response = await fetch ('http://localhost:3000/v1/tasks', {
-        method: 'post',
-        body: JSON.stringify(body),
-        headers: { 'Content-Type': 'application/json' },    
-    });
-
-    let text = await response.text();
-
-    if (response.status === 400)
-        expect(text).toContain("Duplicate key value violates unique constraint");
-    else if (response.status === 201)
-        expect(typeof text).toBe('number');
-    
-
+    try { let id = await insertATask(task); } catch (e) { expect(e).toBeInstanceOf(Error); }
 });
 
-test("Get all tasks via API", async () => {
-    let task_title = "title";
-    let author_id = 1;
-    let task_type = "open_answer";
+test("Delete a task via API", async () => {
+    let task_id = 1;
+    try { await deleteATask(task_id); } catch (e) { expect(e).toBeInstanceOf(Error); }
+});
 
-    let response = await fetch('http://localhost:3000/v1/corrections?task_title=' + task_title + '&author_id=' + author_id + '&task_type=' + task_type);
-    
-    let json = await response.json();
-
-    if (response.status === 200) {
-        expect(json).toBeInstanceOf(Array);
-        for (let i of json)
-            expect(typeof i).toBe('number');
-}
+test("Get a task via API", async () => {
+    let task_id = 1;
+    try { await getATask(task_id); } catch (e) { expect(e).toBeInstanceOf(Error); }
 });

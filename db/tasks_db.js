@@ -8,6 +8,7 @@ let tasks_db = {
             return x.id;
         });
     },
+
     insertTask: async function(task){
         let res = await db.executeQuery('INSERT INTO tasks (title, author, question, type) VALUES ($1, $2, $3, $4) RETURNING id', [task.task_title, task.author_id, task.question, task.task_type]);
 
@@ -18,6 +19,12 @@ let tasks_db = {
         };
 
         return res.rows[0].id;
+    },
+
+    deleteTask: async function (task_id){
+        await db.executeQuery('DELETE FROM tasks WHERE (id = $1)', [task_id]);
+        await db.executeQuery('DELETE FROM task_choices WHERE task_id = $1', [task_id]);
+        await db.executeQuery('DELETE FROM tags WHERE task_id = $1', [task_id]);
     }
 };
 
