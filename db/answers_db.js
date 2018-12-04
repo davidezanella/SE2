@@ -19,7 +19,11 @@ let answers_db = {
         return answer_id;
     },
     deleteAnswer: async function(answer_id){
-        await db.executeQuery('DELETE FROM answer_answers WHERE answer_id = $1', [answer_id]);
+        let res = await db.executeQuery('DELETE FROM answer_answers WHERE answer_id = $1 RETURNING *', [answer_id]);
+
+        if(res.rows.length == 0)
+            throw new Error("Answer to DELETE Not Found");
+
         await db.executeQuery('DELETE FROM WHERE id = $1', [answer_id]);
     }
 };
