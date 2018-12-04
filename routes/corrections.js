@@ -28,5 +28,14 @@ router.post('/corrections', (req, res) => {
 
 });
 
+router.delete('/corrections/:id', (req, res) => {
+    let correction_id = req.params.id;
+   
+    corrections_logic.deleteACorrection(correction_id)
+        .then(data => res.sendStatus(204))
+        .catch(e => {
+            res.status(404).send(e.message);
+        });
+});
 
 module.exports = router;
