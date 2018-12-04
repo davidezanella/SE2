@@ -35,7 +35,7 @@ let answers_db = {
         if(res.rows.length == 0)
             throw new Error("Answer to DELETE Not Found");
 
-        await db.executeQuery('DELETE FROM WHERE id = $1', [answer_id]);
+        await db.executeQuery('DELETE FROM answers WHERE id = $1', [answer_id]);
     }
 };
 
