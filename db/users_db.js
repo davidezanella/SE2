@@ -17,6 +17,11 @@ let users_db = {
         let res = await db.executeQuery('INSERT INTO users (username, name, surname, email) VALUES ($1, $2, $3, $4) RETURNING id', [username, name, surname, email]);
         let user_id = res.rows[0].id;
         return user_id;
+    },
+    deleteUser: async function(id){
+        let response_message = await db.executeQuery("DELETE FROM users WHERE id=$1", [id]);
+        console.log(response_message);
+        return ;
     }
 };
 
