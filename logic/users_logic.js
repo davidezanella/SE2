@@ -5,6 +5,9 @@ let isString = function(s) {
     return true;
   return false;
 }
+function sortNumber(a,b) {
+    return a - b;
+}
 
 let users = {
     getAllUsers: async function (name, surname, email) {
@@ -46,6 +49,25 @@ let users = {
             throw new Error("The user id must be a positive integer!");
         }
         return await users_db.deleteUser(userId);
+    },
+    getExamsPerUser: async function(userId){
+        if (!isNumber(userId) || userId < 0 || userId % 1 !== 0){
+            throw new Error("The user id must be a positive integer!");
+        }
+        let student_exams = await users_db.getExamsPerStudent(userId);
+        let TA_exmas = await users_db.getExamsPerTeachingAssistant(userId);
+        var unique_exams = []; 
+
+        student_exams.concat(TA_exmas);
+        student_exams.sort(sortNumber);
+        if (student_exams.length >= 1)
+            unique_exams.push(student_exams[0]);
+        for (let i = 1; i<student_exams.length; i++){
+            if (student_exams[i] != student_exams[i-1] )
+                unique_exams.push(student_exams[i]);
+        }
+        console.log(unique_exams);
+        return unique_exams;
     }
 };
 

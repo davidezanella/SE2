@@ -54,6 +54,16 @@ router.delete("/users/:id", (req, res) => {
         });
 });
 
+router.get("/users/:user_id/exams", (req, res) => {
+    let user_id = req.params.user_id;
+    users_logic.getExamsPerUser(user_id)
+        .then(data => res.json(data))
+        .catch( e => {
+            res.status(400).send(e.message);
+            console.log(e.stack);
+        });
+});
+
 module.exports = router;
 
 // CREATE TABLE users (

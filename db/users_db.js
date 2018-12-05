@@ -18,11 +18,38 @@ let users_db = {
         let user_id = res.rows[0].id;
         return user_id;
     },
-    deleteUser: async function(id){
+    deleteUser: async function(userId){
         // When the user is successfully deleted it returns true.
-        let response_message = await db.executeQuery("DELETE FROM users WHERE id=$1", [id]);
-        console.log(response_message);
+        let response_message = await db.executeQuery("DELETE FROM users WHERE id=$1", [userId]);
         return true;
+    },
+    getExamsPerStudent: async function(userId){
+        let res = await db.executeQuery(
+        "SELECT e.id "+
+        "FROM exams e "+
+        "INNER JOIN exam_students es "+
+        "ON es.exam_id = e.id "+
+        "WHERE es.student_id = $1; ", [userId]);
+        
+        let result = [];
+        for (let i = 0; i<res.rows.length; i++){
+            result.push(res.rows[i].id);
+        }
+        return result;
+    },
+    getExamsPerTeachingAssistant: async function (userId){
+        let res = await db.executeQuery(
+            "SELECT e.id "+
+            "FROM exams e "+
+            "INNER JOIN exam_tas et "+
+            "ON et.exam_id = e.id "+
+            "WHERE et.ta_id = $1; ", [userId]);
+        
+        let result = [];
+        for (let i = 0; i<res.rows.length; i++){
+            result.push(res.rows[i].id);
+        }
+        return result;
     }
 };
 
