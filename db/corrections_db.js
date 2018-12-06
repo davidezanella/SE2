@@ -12,6 +12,26 @@ let corrections_db = {
         return res.rows.map((x) => {
             return x.id;
         });
+    },
+
+    getACorrection: async function (correction_id) {
+        let res = await db.executeQuery('SELECT * FROM corrections WHERE id=$1', [correction_id]);
+        let result
+        if (res.rows.length != 0) {
+            result = res.rows[0];
+        }
+        else {
+            throw new Error("The correction ID is inexistent.")
+        }
+
+        return result;
+    },
+
+    deleteACorrection: async function (correction_id) {
+        let res = await db.executeQuery('DELETE FROM corrections WHERE id=$1 RETURNING *', [correction_id]);
+
+        if (res.rows.length == 0)
+            throw new Error("The correction ID is inexistent.")
     }
 };
 

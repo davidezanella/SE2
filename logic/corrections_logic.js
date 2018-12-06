@@ -31,6 +31,19 @@ let corrections = {
 
         return await corrections_db.getAllCorrections(answer_id, user_id);
     },
+
+    getACorrection: async function (correction_id) {
+        if (!isNumber(correction_id))
+            throw new Error("Correction ID is not valid.")
+        return await corrections_db.getACorrection(correction_id);
+    },
+
+    deleteACorrection: async function (correction_id) {
+        if (!isNumber(correction_id))
+            throw new Error("Correction ID is not valid.");
+
+        await corrections_db.deleteACorrection(correction_id);
+    }
 };
 
 module.exports = corrections;

@@ -1,6 +1,7 @@
 let corrections_logic = require('../logic/corrections_logic');
-let fetch = require ('node-fetch');
+let fetch = require('node-fetch');
 
+/*insert a correction */
 test("Undefined correction", () => {
     let correction = undefined;
     expect(corrections_logic.insertACorrection(correction)).rejects.toBeInstanceOf(Error);
@@ -194,7 +195,7 @@ test("Insert a valid correction", async () => {
 });
 
 
-
+/* get all corrections */
 test("Object answer_id in the filter", () => {
     let answer_id = {};
     let user_id = 1;
@@ -248,6 +249,55 @@ test("Insert valid filters", async () => {
 
 });
 
+/*delete a correction */
+test("Undefined correction_id", () => {
+    let correction_id = undefined;
+    expect(corrections_logic.deleteACorrection(correction_id)).rejects.toBeInstanceOf(Error);
+
+});
+
+test("String correction_id", () => {
+    let correction_id = "c";
+    expect(corrections_logic.deleteACorrection(correction_id)).rejects.toBeInstanceOf(Error);
+
+});
+
+test("Object correction_id", () => {
+    let correction_id = {};
+    expect(corrections_logic.deleteACorrection(correction_id)).rejects.toBeInstanceOf(Error);
+
+});
+
+test("Array correction_id", () => {
+    let correction_id = [2];
+    expect(corrections_logic.deleteACorrection(correction_id)).rejects.toBeInstanceOf(Error);
+
+});
+
+/* get a correction */
+test("Undefined correction_id", () => {
+    let correction_id = undefined;
+    expect(corrections_logic.getACorrection(correction_id)).rejects.toBeInstanceOf(Error);
+
+});
+
+test("String correction_id", () => {
+    let correction_id = "c";
+    expect(corrections_logic.getACorrection(correction_id)).rejects.toBeInstanceOf(Error);
+
+});
+
+test("Object correction_id", () => {
+    let correction_id = {};
+    expect(corrections_logic.getACorrection(correction_id)).rejects.toBeInstanceOf(Error);
+
+});
+
+test("Array correction_id", () => {
+    let correction_id = [2];
+    expect(corrections_logic.getACorrection(correction_id)).rejects.toBeInstanceOf(Error);
+
+});
 
 /*API calls test */
 
@@ -261,43 +311,105 @@ afterAll(() => {
 });
 
 
-test("Insert valid correction via API", async () => {
-    let correction = {
-        answer_id: 124,
-        text: "t",
-        score: 1,
-        user_id: 1
-    };
+async function getAllCorrections(answer_id, user_id) {
+    let getAll_result = await fetch('http://localhost:3000/v1/corrections?answer_id=' + answer_id + '&user_id=' + user_id, {
+        method: 'get',
+        headers: {
+            'Accept': 'application/json'
+        }
+    });
+    let getAll_json = await getAll_result.json();
+    return getAll_json;
+};
 
-    let body = { Correction: correction};
-
-    let response = await fetch ('http://localhost:3000/v1/corrections', {
-        method: 'post',
-        body: JSON.stringify(body),
-        headers: { 'Content-Type': 'application/json' },    
+async function getACorrection(correction_id) {
+    let result = await fetch('http://localhost:3000/v1/corrections/' + correction_id, {
+        method: 'get',
+        headers: {
+            'Content-Type': 'application/json'
+        }
     });
 
-    let text = await response.text();
+    if (result.status === 200) {
+        let json = await result.json();
+        return json;
+    }
+    else if (result.status === 404) {
+        return null;
+    }
+};
 
-    if (response.status === 400)
-        expect(text).toContain("duplicate key value violates unique constraint");
-    else if (response.status === 201)
-        expect(typeof text).toBe('number');
-    
+async function insertACorrection(correction) {
+    let body = { Correction: correction }
 
+    let result = await fetch('http://localhost:3000/v1/corrections', {
+        method: 'post',
+        body: JSON.stringify(body),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    });
+    let correction_id = await result.text();
+    return correction_id;
+
+};
+
+async function deleteACorrection(correction_id) {
+    await fetch('http://localhost:3000/v1/corrections/' + correction_id, {
+        method: 'delete',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    });
+};
+
+test("Insert a correction via API and delete", async () => {
+    let correction = {
+        answer_id: 430,
+        text: 't',
+        score: 5,
+        user_id: 1
+    }
+
+    try {
+        let correction_id = await insertACorrection(correction);
+        await deleteACorrection(correction_id);
+    }
+    catch (e) {
+        expect(e).toContain("duplicate key value violates unique constraint")
+    }
 });
 
 test("Get all corrections via API", async () => {
-    let answer_id=124;
-    let user_id=1;
+    let answer_id = 124;
+    let user_id = 1;
 
-    let response = await fetch('http://localhost:3000/v1/corrections?answer_id=' + answer_id + '&user_id=' + user_id);
-    
-    let json = await response.json();
+    let json = await getAllCorrections(answer_id, user_id);
+    expect(json).toBeInstanceOf(Array);
+    for (let i of json)
+        expect(typeof i).toBe('number');
 
-    if (response.status === 200) {
-        expect(json).toBeInstanceOf(Array);
-        for (let i of json)
-            expect(typeof i).toBe('number');
-}
 });
+
+test("Get an existent correction via API", async () => {
+    let correction_id = 199;
+
+    let res = await getACorrection(correction_id);
+    console.log("test json: " + res);
+    expect(typeof res).toBe('object');
+    expect(typeof res.id).toBe('number');
+    expect(typeof res.answer_id).toBe('number');
+    expect(typeof res.text).toBe('string');
+    expect(typeof res.score).toBe('number');
+    expect(typeof res.user_id).toBe('number');
+
+});
+
+test("Get an inexistent correction via API", async () => {
+    let correction_id = 19;
+    let res = await getACorrection(correction_id);
+    expect(res).toBe(null);
+
+})
