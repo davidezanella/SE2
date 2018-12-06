@@ -15,7 +15,7 @@ router.get('/tasks', (req, res) => {
 });
 
 router.post('/tasks', (req,res) => {
-    let task = req.body.Task;
+    let task = req.body;
 
     tasks_logic.insertTask(task).then(data => res.json(data)).catch(e => {
         res.send(400, e.message);

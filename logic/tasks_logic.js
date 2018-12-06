@@ -44,7 +44,7 @@ let tasks = {
         if(tasks.length === 0)
             throw new Error("No tasks added!");
         
-        return tasks_db.insertTask(task);
+        return await tasks_db.insertTask(task);
     },
 
 
@@ -69,7 +69,7 @@ let tasks = {
             }
             if(!tmp) throw new Error("Task type is not valid!");
         }
-        return tasks_db.getAllTasks(task_title, author_id, task_type);
+        return await tasks_db.getAllTasks(task_title, author_id, task_type);
     },
 
     deleteATask: async function(task_id) {
@@ -82,7 +82,7 @@ let tasks = {
     getATask: async function(task_id){
         if (!isNumber(task_id))
             throw new Error("Invalid task id!");
-        return tasks_db.getTask(task_id);
+        return await tasks_db.getTask(task_id);
     }
 
 };

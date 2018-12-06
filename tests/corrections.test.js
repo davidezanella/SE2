@@ -179,7 +179,7 @@ test("Object user_id", () => {
 
 test("Insert a valid correction", async () => {
     let correction = {
-        answer_id: 124,
+        answer_id: 773,
         text: "t",
         score: 1,
         user_id: 1
@@ -190,7 +190,7 @@ test("Insert a valid correction", async () => {
         expect(typeof data).toBe('number');
     }
     catch (e) {
-        expect(e.detail).toBe("Key (answer_id, user_id)=(124, 1) already exists.");
+        expect(e.detail).toBe("Key (answer_id, user_id)=(773, 1) already exists.");
     }
 });
 
@@ -367,7 +367,7 @@ async function deleteACorrection(correction_id) {
 
 test("Insert a correction via API and delete", async () => {
     let correction = {
-        answer_id: 430,
+        answer_id: 773,
         text: 't',
         score: 5,
         user_id: 1
@@ -383,7 +383,7 @@ test("Insert a correction via API and delete", async () => {
 });
 
 test("Get all corrections via API", async () => {
-    let answer_id = 124;
+    let answer_id = 773;
     let user_id = 1;
 
     let json = await getAllCorrections(answer_id, user_id);

@@ -1,17 +1,17 @@
-let tasks_logic = require ("../logic/tasks_logic");
-let fetch = require ("node-fetch");
+let tasks_logic = require("../logic/tasks_logic");
+let fetch = require("node-fetch");
 
-test("Undefined title",() => {
+test("Undefined title", () => {
     let task = {
         task_title: undefined,
         author_id: 1,
         question: "",
         task_type: "open_answer",
-        choices: ["risp1","risp2","risp3"],
+        choices: ["risp1", "risp2", "risp3"],
         correct_answer: ["risp1"]
     };
     expect(tasks_logic.insertTask(task))
-    .rejects.toBeInstanceOf(Error);
+        .rejects.toBeInstanceOf(Error);
 });
 
 test("Object title", () => {
@@ -20,7 +20,7 @@ test("Object title", () => {
         author_id: 1,
         question: "",
         task_type: "open_answer",
-        choices: ["risp1","risp2","risp3"],
+        choices: ["risp1", "risp2", "risp3"],
         correct_answer: ["risp1"]
     };
     expect(tasks_logic.insertTask(task)).rejects.toBeInstanceOf(Error);
@@ -32,7 +32,7 @@ test("Array title", () => {
         author_id: 1,
         question: "",
         task_type: "open_answer",
-        choices: ["risp1","risp2","risp3"],
+        choices: ["risp1", "risp2", "risp3"],
         correct_answer: ["risp1"]
     };
     expect(tasks_logic.insertTask(task)).rejects.toBeInstanceOf(Error);
@@ -40,11 +40,11 @@ test("Array title", () => {
 
 test("Undefined author id", () => {
     let task = {
-        task_title : "",
-        author_id : undefined,
+        task_title: "",
+        author_id: undefined,
         question: "",
         task_type: "open_answer",
-        choices: ["risp1","risp2","risp3"],
+        choices: ["risp1", "risp2", "risp3"],
         correct_answer: ["risp1"]
     };
     expect(tasks_logic.insertTask(task)).rejects.toBeInstanceOf(Error);
@@ -52,11 +52,11 @@ test("Undefined author id", () => {
 
 test("Array author id", () => {
     let task = {
-        task_title : "",
-        author_id : [],
+        task_title: "",
+        author_id: [],
         question: "",
         task_type: "open_answer",
-        choices: ["risp1","risp2","risp3"],
+        choices: ["risp1", "risp2", "risp3"],
         correct_answer: ["risp1"]
     };
     expect(tasks_logic.insertTask(task)).rejects.toBeInstanceOf(Error);
@@ -64,11 +64,11 @@ test("Array author id", () => {
 
 test("Object author id", () => {
     let task = {
-        task_title : "",
-        author_id : {},
+        task_title: "",
+        author_id: {},
         question: "",
         task_type: "open_answer",
-        choices: ["risp1","risp2","risp3"],
+        choices: ["risp1", "risp2", "risp3"],
         correct_answer: ["risp1"]
     };
     expect(tasks_logic.insertTask(task)).rejects.toBeInstanceOf(Error);
@@ -76,11 +76,11 @@ test("Object author id", () => {
 
 test("Undefined question", () => {
     let task = {
-        task_title : "",
-        author_id : 1,
+        task_title: "",
+        author_id: 1,
         question: undefined,
         task_type: "open_answer",
-        choices: ["risp1","risp2","risp3"],
+        choices: ["risp1", "risp2", "risp3"],
         correct_answer: ["risp1"]
     };
     expect(tasks_logic.insertTask(task)).rejects.toBeInstanceOf(Error);
@@ -88,11 +88,11 @@ test("Undefined question", () => {
 
 test("Object question", () => {
     let task = {
-        task_title : "",
-        author_id : 1,
-        question : {},
+        task_title: "",
+        author_id: 1,
+        question: {},
         task_type: "open_answer",
-        choices: ["risp1","risp2","risp3"],
+        choices: ["risp1", "risp2", "risp3"],
         correct_answer: ["risp1"]
     };
     expect(tasks_logic.insertTask(task)).rejects.toBeInstanceOf(Error);
@@ -104,7 +104,7 @@ test("Array question", () => {
         author_id: 1,
         question: [],
         task_type: "open_answer",
-        choices: ["risp1","risp2","risp3"],
+        choices: ["risp1", "risp2", "risp3"],
         correct_answer: ["risp1"]
     };
     expect(tasks_logic.insertTask(task)).rejects.toBeInstanceOf(Error);
@@ -112,11 +112,11 @@ test("Array question", () => {
 
 test("Undefined task type", () => {
     let task = {
-        task_title : "",
-        author_id : 1,
+        task_title: "",
+        author_id: 1,
         question: "",
         task_type: undefined,
-        choices: ["risp1","risp2","risp3"],
+        choices: ["risp1", "risp2", "risp3"],
         correct_answer: ["risp1"]
     };
     expect(tasks_logic.insertTask(task)).rejects.toBeInstanceOf(Error);
@@ -124,11 +124,11 @@ test("Undefined task type", () => {
 
 test("Array task type", () => {
     let task = {
-        task_title : "",
-        author_id : 1,
+        task_title: "",
+        author_id: 1,
         question: "",
         task_type: [],
-        choices: ["risp1","risp2","risp3"],
+        choices: ["risp1", "risp2", "risp3"],
         correct_answer: ["risp1"]
     };
     expect(tasks_logic.insertTask(task)).rejects.toBeInstanceOf(Error);
@@ -136,17 +136,17 @@ test("Array task type", () => {
 
 test("Object task type", () => {
     let task = {
-        task_title : "",
-        author_id : 1,
+        task_title: "",
+        author_id: 1,
         question: "",
         task_type: {},
-        choices: ["risp1","risp2","risp3"],
+        choices: ["risp1", "risp2", "risp3"],
         correct_answer: ["risp1"]
     };
     expect(tasks_logic.insertTask(task)).rejects.toBeInstanceOf(Error);
 });
 
-test("Undefined task",()=> {
+test("Undefined task", () => {
     let task = undefined;
     expect(tasks_logic.insertTask(task)).rejects.toBeInstanceOf(Error);
 });
@@ -163,12 +163,11 @@ test("String task", () => {
 
 test("Valid task", () => {
     let task = {
-        id : 3,
-        task_title : "",
-        author_id : 1,
+        task_title: "",
+        author_id: 1,
         question: "",
         task_type: "open_answer",
-        choices: ["risp1","risp2","risp3"],
+        choices: ["risp1", "risp2", "risp3"],
         correct_answer: ["risp1"]
     };
     return tasks_logic.insertTask(task).then((data) => {
@@ -176,7 +175,7 @@ test("Valid task", () => {
 });
 
 // Check choices
-test("Undefined choices",() => {
+test("Undefined choices", () => {
     let task = {
         task_title: "",
         author_id: 1,
@@ -186,7 +185,7 @@ test("Undefined choices",() => {
         correct_answer: ["risp1"]
     };
     expect(tasks_logic.insertTask(task))
-    .rejects.toBeInstanceOf(Error);
+        .rejects.toBeInstanceOf(Error);
 });
 
 test("Object choices", () => {
@@ -202,17 +201,17 @@ test("Object choices", () => {
 });
 
 // Check correct answers
-test("Undefined correct answers",() => {
+test("Undefined correct answers", () => {
     let task = {
         task_title: "",
         author_id: 1,
         question: "",
         task_type: "open_answer",
-        choices: ["risp1","risp2","risp3"],
+        choices: ["risp1", "risp2", "risp3"],
         correct_answer: undefined
     };
     expect(tasks_logic.insertTask(task))
-    .rejects.toBeInstanceOf(Error);
+        .rejects.toBeInstanceOf(Error);
 });
 
 test("Object choices", () => {
@@ -221,7 +220,7 @@ test("Object choices", () => {
         author_id: 1,
         question: "",
         task_type: "open_answer",
-        choices: ["risp1","risp2","risp3"],
+        choices: ["risp1", "risp2", "risp3"],
         correct_answer: {}
     };
     expect(tasks_logic.insertTask(task)).rejects.toBeInstanceOf(Error);
@@ -229,7 +228,7 @@ test("Object choices", () => {
 
 // Check params of the delete
 test("Object task id", () => {
-    let task_id={};
+    let task_id = {};
     expect(tasks_logic.deleteATask(task_id)).rejects.toBeInstanceOf(Error);
 });
 
@@ -255,10 +254,10 @@ afterAll(() => {
 });
 
 async function insertATask(task) {
-    let response = await fetch ('http://localhost:3000/v1/tasks', {
+    let response = await fetch('http://localhost:3000/v1/tasks', {
         method: 'post',
-        body: JSON.stringify(body),
-        headers: { 'Content-Type': 'application/json' },    
+        body: JSON.stringify(task),
+        headers: { 'Content-Type': 'application/json' },
     });
 
     let text = await response.text();
@@ -284,21 +283,18 @@ async function deleteATask(task_id) {
 }
 
 
-test("Insert valid task via API", async () => {
+test("Insert valid task via API and delete", async () => {
     let task = {
         task_title: "",
         author_id: 1,
         question: "",
         task_type: "open_answer",
-        choices: ["risp1","risp2","risp3"],
+        choices: ["risp1", "risp2", "risp3"],
         correct_answer: ["risp1"]
     };
-    try { let id = await insertATask(task); } catch (e) { expect(e).toBeInstanceOf(Error); }
-});
-
-test("Delete a task via API", async () => {
-    let task_id = 1;
-    try { await deleteATask(task_id); } catch (e) { expect(e).toBeInstanceOf(Error); }
+    
+    let id = await insertATask(task);
+    await deleteATask(id);    
 });
 
 test("Get tasks via API", async () => {
@@ -307,14 +303,12 @@ test("Get tasks via API", async () => {
     let task_type = 'open_answer';
 
     let allTasks = await getAllTasks(task_title, author_id, task_type);
-
     expect(allTasks).toBeInstanceOf(Array);
 
-    for (let count of allTasks) {
-        expect(typeof count).toBe('number');
-        let task = await getATask(count);
-        expect(typeof task.id).toBe('number');
-        expect(typeof task.title).toBe('string');
-        expect(typeof task.question).toBe('string');
-    }
+    let count = allTasks[0];
+    expect(typeof count).toBe('number');
+    let task = await getATask(count);
+    expect(typeof task.id).toBe('number');
+    expect(typeof task.title).toBe('string');
+    expect(typeof task.question).toBe('string');
 });

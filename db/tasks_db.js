@@ -22,9 +22,13 @@ let tasks_db = {
     },
 
     deleteTask: async function (task_id){
-        await db.executeQuery('DELETE FROM tasks WHERE id = $1', [task_id]);
         await db.executeQuery('DELETE FROM task_choices WHERE task_id = $1', [task_id]);
         await db.executeQuery('DELETE FROM tags WHERE task_id = $1', [task_id]);
+        try{
+        await db.executeQuery('DELETE FROM tasks WHERE id = $1', [task_id]);
+        }
+        catch(e){
+        console.log(e);}
     },
 
     getTask: async function(task_id){
