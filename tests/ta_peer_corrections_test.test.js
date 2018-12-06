@@ -6,7 +6,30 @@ let user_logic = require("../logic/users_logic");
 let answer_logic = require("../logic/answers_logic");
 let task_logic = require("../logic/tasks_logic");
 
+var version = "v1";
+
 // GET test for TA peer correction
+
+async function fetch_ta_peer_correction_by_id(ta_peer_correction_id){
+    let response = await fetch('http://localhost:3000/'+ version +'/ta-peer-corrections/' + ta_peer_correction_id, {
+        method: 'get',
+        headers: { 'Content-Type': 'application/json' },
+    });
+    let data = await response.json();
+    return data;
+}
+
+async function fetchUpdateTaPeerCorrection(TaPeerCorrectionNoId, ta_peer_correction_id){
+    let response = await fetch('http://localhost:3000/'+ version +'/ta-peer-corrections/' + ta_peer_correction_id, {
+        method: 'put',
+        body: JSON.stringify({'TA-peer-correction': TaPeerCorrectionNoId}),
+        headers: { 'Content-Type': 'application/json' },
+    });
+    console.log("the data is");
+    console.log(response);
+    let data = await response.text();
+    return data;    
+}
 
 /*  
     FAILED ONES
@@ -60,6 +83,15 @@ test('function ta peer correction id', () => {
     expect(taPeerCorrections.getTaPeerCorrectionById(ta_peer_correction_id)).rejects.toBeInstanceOf(Error);
 });
 
+/* API calls test */
+let api;
+beforeAll(() => {
+    api = require('../api');
+});
+
+afterAll(() => {
+    api.close();
+}); 
 
 /* Valid ta peer correction ID */
 test('valid ta peer correction id', async () => {
@@ -86,20 +118,16 @@ test('valid ta peer correction id', async () => {
     peer_correction_id = peer_correction_id.rows[0].id;
     // We keep the same user just not to be forced to create another one.
     var peer_review_correction_text = "The peer review is correct.";
+
     let ta_peer_correction_id = await taPeerCorrections.insertTaPeerCorrection({
         "peer_correction_id": peer_correction_id,
         "answer_id": answer_id,
         "text": peer_review_correction_text,
         "user_id": user_id
     });
-    let data;
-    let exception = false;
-    try {
-        data = await taPeerCorrections.getTaPeerCorrectionById(ta_peer_correction_id);
-    }
-    catch (e) {
-        exception = true;
-    }
+
+    // API call
+    let data = await fetch_ta_peer_correction_by_id(ta_peer_correction_id);
     
     expect(typeof data).toBe('object');
     expect(isNumber(data['id'])).toBeTruthy();
@@ -123,7 +151,6 @@ test('valid ta peer correction id', async () => {
     await task_logic.deleteATask(task_id);
     await user_logic.deleteUser(user_id);
 });
-
 
 // #####################################################
 // PUT to update TA peer correction
@@ -679,7 +706,9 @@ test('Absent id in a non empty object', () => {
     expect(taPeerCorrections.updateTaPeerCorrection(TaPeerCorrection)).rejects.toBeInstanceOf(Error);
 });
 
+
 // Test response to a valid request:
+
 test('valid ta peer correction id', async () => {
     jest.setTimeout(30000);
     // Before inserting a ta peer correction, we first need a user, a peer correction, a task, an answer.
@@ -715,16 +744,12 @@ test('valid ta peer correction id', async () => {
         "peer_correction_id": peer_correction_id,
         "answer_id": answer_id,
         "text": updated_text,
-        "user_id": user_id,
-        "id": ta_peer_correction_id
+        "user_id": user_id
     }
     var returning_id;
-    try {
-        returning_id = await taPeerCorrections.updateTaPeerCorrection(TaPeerCorrection);
-    }
-    catch (e) {
-        exception = true;
-    }
+    
+    returning_id = await fetchUpdateTaPeerCorrection(TaPeerCorrection, ta_peer_correction_id);
+    
     expect(isNumber(returning_id)).toBeTruthy();
 
     // cleans test entries in the db
