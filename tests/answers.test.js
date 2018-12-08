@@ -319,7 +319,7 @@ async function deleteAnswer(answer_id) {
 
 /* Answers GET all */
 async function getAllAnswers(user_id, task_id, type) {
-    let response = await fetch('http://localhost:3000/v1/answers?user_id=' + user_id + '&task_id=' + task_id + '&type=' + type);
+    let response = await fetch('http://localhost:3000/v1/answers');
 
     let json = await response.json();
     return json;
@@ -362,11 +362,8 @@ test('Insert a valid answer via API and DELETE', async () => {
 
 test('Get all answers via API', async () => {
     jest.setTimeout(30000);
-    let user_id = 1;
-    let task_id = 1;
-    let type = 'single_choice';
 
-    let json = await getAllAnswers(user_id, task_id, type);
+    let json = await getAllAnswers();
 
     expect(json).toBeInstanceOf(Array);
     for (let i of json) {
