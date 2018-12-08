@@ -12,7 +12,6 @@ router.get('/answers', (req, res) => {
         .then(data => res.json(data))
         .catch(e => {
             res.status(404).send(e.message);
-            console.log(e.stack);
         });
 });
 
@@ -22,7 +21,6 @@ router.get('/answers/:id', (req, res) => {
         .then((data) => res.status(200).json(data))
         .catch(e => {
             res.sendStatus(404);
-            console.log(e.stack);
         });
 });
 
@@ -33,7 +31,6 @@ router.post('/answers', (req, res) => {
         .then(data => res.status(201).json(data))
         .catch(e => {
             res.status(400).send(e.message);
-            console.log(e.stack);
         });
 });
 
@@ -43,7 +40,6 @@ router.delete('/answers/:id', (req, res) => {
         .then(() => res.sendStatus(204))
         .catch(e => {
             res.status(404).send(e.message);
-            console.log(e.stack);
         });
 });
 

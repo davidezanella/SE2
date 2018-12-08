@@ -13,7 +13,6 @@ router.get('/users', (req, res) => {
         .then(data => res.json(data))
         .catch(e => {
             res.status(404).send(e.message);
-            console.log(e.stack);
         });
 });
 
@@ -25,7 +24,6 @@ router.get('/users/:id', (req, res) => {
         .then(data => res.json(data))
         .catch(e => {
             res.status(404).send(e.message);
-            console.log(e.stack);
         })
 });
 
@@ -39,7 +37,6 @@ router.post('/users', (req, res) => {
         .then(data => res.status(201).json(data))
         .catch(e => {
             res.status(400).send(e.message);
-            console.log(e.stack);
         });
 });
 
@@ -50,7 +47,6 @@ router.delete("/users/:id", (req, res) => {
         .then(data => res.json(data))       // Should return nothing actually...
         .catch(e => {
             res.status(400).send(e.message);
-            console.log(e.stack);
         });
 });
 

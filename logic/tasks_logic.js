@@ -76,7 +76,6 @@ let tasks = {
         if (!isNumber(task_id))
             throw new Error("Invalid task id!");
         await tasks_db.deleteTask(task_id);
-        console.log(task_id);
     },
 
     getATask: async function(task_id){
