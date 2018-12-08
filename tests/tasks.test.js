@@ -161,7 +161,7 @@ test("String task", () => {
     expect(tasks_logic.insertTask(task)).rejects.toBeInstanceOf(Error);
 });
 
-test("Valid task", () => {
+test("Valid task", async () => {
     let task = {
         task_title: "",
         author_id: 1,
@@ -170,8 +170,11 @@ test("Valid task", () => {
         choices: ["risp1", "risp2", "risp3"],
         correct_answer: ["risp1"]
     };
-    return tasks_logic.insertTask(task).then((data) => {
-        expect(typeof data).toBe("number"); });
+    let data = await tasks_logic.insertTask(task);
+    expect(typeof data).toBe("number");
+
+    //remove task
+    await tasks_logic.deleteATask(data);
 });
 
 // Check choices
