@@ -432,13 +432,15 @@ test("Get all corrections via API", async () => {
         expect(typeof i).toBe('number');
     }
 
-    let res = await getACorrection(json[0]);
-    expect(typeof res).toBe('object');
-    expect(typeof res.id).toBe('number');
-    expect(typeof res.answer_id).toBe('number');
-    expect(typeof res.text).toBe('string');
-    expect(typeof res.score).toBe('number');
-    expect(typeof res.user_id).toBe('number');
+    if (json.length > 0) {
+        let res = await getACorrection(json[0]);
+        expect(typeof res).toBe('object');
+        expect(typeof res.id).toBe('number');
+        expect(typeof res.answer_id).toBe('number');
+        expect(typeof res.text).toBe('string');
+        expect(typeof res.score).toBe('number');
+        expect(typeof res.user_id).toBe('number');
+    }
 });
 
 test("Get an inexistent correction via API", async () => {
