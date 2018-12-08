@@ -1,4 +1,6 @@
 let answers_logic = require('../logic/answers_logic');
+let users_logic = require('../logic/users_logic');
+let tasks_logic = require('../logic/tasks_logic');
 let fetch = require('node-fetch');
 
 /* Answer POST */
@@ -129,28 +131,32 @@ test('Empty array of answers', () => {
     expect(answers_logic.insertAnAnswer(answer)).rejects.toBeInstanceOf(Error);
 });
 
-test('Insert a valid answer', async (done) => {
+test('Insert a valid answer', async () => {
+    jest.setTimeout(30000);
+    let user_id = await users_logic.createNewUser("test_username", "test_name", "test_surname", "test.email@test.com");
+
+    let task_id = await tasks_logic.insertTask({
+        task_title: "",
+        author_id: user_id,
+        question: "",
+        task_type: "open_answer",
+        choices: ["risp1", "risp2", "risp3"],
+        correct_answer: ["risp1"]
+    });
+
     let answer = {
-        user_id: 1,
-        task_id: 1,
+        user_id: user_id,
+        task_id: task_id,
         answers: ['a', 'c']
     };
 
-    let data;
-    let exception = false;
-    try {
-        data = await answers_logic.insertAnAnswer(answer);
-    }
-    catch (e) {
-        exception = true;
-        expect(e.detail).toBe("Key (user_id, task_id)=(1, 1) already exists.");
-    }
+    let data = await answers_logic.insertAnAnswer(answer);
+    
+    expect(typeof data).toBe('number');
 
-    if (exception && data === undefined)
-        done();
-    else
-        expect(typeof data).toBe('number');
-    done();
+    await answers_logic.deleteAnAnswer(data);
+    await tasks_logic.deleteATask(task_id);
+    await users_logic.deleteUser(user_id);
 });
 
 
@@ -328,23 +334,34 @@ async function getAnAnswer(answer_id) {
 }
 
 test('Insert a valid answer via API and DELETE', async () => {
+    jest.setTimeout(30000);
+    let user_id = await users_logic.createNewUser("test_username", "test_name", "test_surname", "test.email@test.com");
+
+    let task_id = await tasks_logic.insertTask({
+        task_title: "",
+        author_id: user_id,
+        question: "",
+        task_type: "open_answer",
+        choices: ["risp1", "risp2", "risp3"],
+        correct_answer: ["risp1"]
+    });
+
     let body = {
-        user_id: 1,
-        task_id: 1,
+        user_id: user_id,
+        task_id: task_id,
         answers: ['a', 'c']
     };
 
-    try {
-        let id = await insertAnswer(body);
+    let id = await insertAnswer(body);
 
-        await deleteAnswer(id);
-    }
-    catch (e) {
-        expect(e).toContain("duplicate key value violates unique constraint");
-    }
+    await deleteAnswer(id);
+    
+    await tasks_logic.deleteATask(task_id);
+    await users_logic.deleteUser(user_id);
 });
 
 test('Get all answers via API', async () => {
+    jest.setTimeout(30000);
     let user_id = 1;
     let task_id = 1;
     let type = 'single_choice';
