@@ -28,7 +28,7 @@ router.get('/corrections/:id', (req, res) => {
 
 router.post('/corrections', (req, res) => {
 
-    let correction = req.body.Correction;
+    let correction = req.body;
 
     corrections_logic.insertACorrection(correction)
         .then(data => res.status(201).json(data))

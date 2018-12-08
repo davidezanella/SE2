@@ -1,4 +1,7 @@
 let corrections_logic = require('../logic/corrections_logic');
+let users_logic = require('../logic/users_logic');
+let tasks_logic = require('../logic/tasks_logic');
+let answers_logic = require('../logic/answers_logic');
 let fetch = require('node-fetch');
 
 /*insert a correction */
@@ -178,20 +181,40 @@ test("Object user_id", () => {
 });
 
 test("Insert a valid correction", async () => {
+    jest.setTimeout(30000);
+    let user_id = await users_logic.createNewUser("test_username", "test_name", "test_surname", "test.email@test.com");
+
+    let task_id = await tasks_logic.insertTask({
+        task_title: "",
+        author_id: user_id,
+        question: "",
+        task_type: "open_answer",
+        choices: ["risp1", "risp2", "risp3"],
+        correct_answer: ["risp1"]
+    });
+
+    let answer = {
+        user_id: user_id,
+        task_id: task_id,
+        answers: ['a', 'c']
+    };
+
+    let answer_id = await answers_logic.insertAnAnswer(answer);
+
     let correction = {
-        answer_id: 773,
+        answer_id: answer_id,
         text: "t",
         score: 1,
         user_id: 1
     };
 
-    try {
-        const data = await corrections_logic.insertACorrection(correction);
-        expect(typeof data).toBe('number');
-    }
-    catch (e) {
-        expect(e.detail).toBe("Key (answer_id, user_id)=(773, 1) already exists.");
-    }
+    const data = await corrections_logic.insertACorrection(correction);
+    expect(typeof data).toBe('number');
+
+    await corrections_logic.deleteACorrection(data);
+    await answers_logic.deleteAnAnswer(answer_id);
+    await tasks_logic.deleteATask(task_id);
+    await users_logic.deleteUser(user_id);
 });
 
 
@@ -312,7 +335,7 @@ afterAll(() => {
 
 
 async function getAllCorrections(answer_id, user_id) {
-    let getAll_result = await fetch('http://localhost:3000/v1/corrections?answer_id=' + answer_id + '&user_id=' + user_id, {
+    let getAll_result = await fetch('http://localhost:3000/v1/corrections', {
         method: 'get',
         headers: {
             'Accept': 'application/json'
@@ -340,11 +363,10 @@ async function getACorrection(correction_id) {
 };
 
 async function insertACorrection(correction) {
-    let body = { Correction: correction }
 
     let result = await fetch('http://localhost:3000/v1/corrections', {
         method: 'post',
-        body: JSON.stringify(body),
+        body: JSON.stringify(correction),
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
@@ -366,49 +388,61 @@ async function deleteACorrection(correction_id) {
 };
 
 test("Insert a correction via API and delete", async () => {
+    jest.setTimeout(30000);
+    let user_id = await users_logic.createNewUser("test_username", "test_name", "test_surname", "test.email@test.com");
+
+    let task_id = await tasks_logic.insertTask({
+        task_title: "",
+        author_id: user_id,
+        question: "",
+        task_type: "open_answer",
+        choices: ["risp1", "risp2", "risp3"],
+        correct_answer: ["risp1"]
+    });
+
+    let answer = {
+        user_id: user_id,
+        task_id: task_id,
+        answers: ['a', 'c']
+    };
+
+    let answer_id = await answers_logic.insertAnAnswer(answer);
+
     let correction = {
-        answer_id: 773,
+        answer_id: answer_id,
         text: 't',
         score: 5,
         user_id: 1
     }
 
-    try {
-        let correction_id = await insertACorrection(correction);
-        await deleteACorrection(correction_id);
-    }
-    catch (e) {
-        expect(e).toContain("duplicate key value violates unique constraint")
-    }
+    //API calls
+    let correction_id = await insertACorrection(correction);
+    await deleteACorrection(correction_id);
+
+    //db calls
+    await answers_logic.deleteAnAnswer(answer_id);
+    await tasks_logic.deleteATask(task_id);
+    await users_logic.deleteUser(user_id);
 });
 
 test("Get all corrections via API", async () => {
-    let answer_id = 773;
-    let user_id = 1;
-
-    let json = await getAllCorrections(answer_id, user_id);
+    let json = await getAllCorrections();
     expect(json).toBeInstanceOf(Array);
-    for (let i of json)
+    for (let i of json) {
         expect(typeof i).toBe('number');
+    }
 
-});
-
-test("Get an existent correction via API", async () => {
-    let correction_id = 199;
-
-    let res = await getACorrection(correction_id);
-    console.log("test json: " + res);
+    let res = await getACorrection(json[0]);
     expect(typeof res).toBe('object');
     expect(typeof res.id).toBe('number');
     expect(typeof res.answer_id).toBe('number');
     expect(typeof res.text).toBe('string');
     expect(typeof res.score).toBe('number');
     expect(typeof res.user_id).toBe('number');
-
 });
 
 test("Get an inexistent correction via API", async () => {
-    let correction_id = 19;
+    let correction_id = 1;
     let res = await getACorrection(correction_id);
     expect(res).toBe(null);
 
