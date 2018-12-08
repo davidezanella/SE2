@@ -4,13 +4,11 @@ var router = express.Router();
 let taPeerCorrections_logic = require('../logic/TA-peer-corrections_logic');
 
 router.get('/ta-peer-corrections/:ta_peer_correction_id', (req, res) => {
-    
     let ta_peer_correction_id = req.params.ta_peer_correction_id;
     taPeerCorrections_logic.getTaPeerCorrectionById(ta_peer_correction_id)
     .then(data => res.json(data))
     .catch(e => {
         res.status(404).send(e.message);
-        console.log(e.stack);
     });
     
 });
@@ -25,7 +23,6 @@ router.put('/ta-peer-corrections/:ta_peer_correction_id', (req, res) => {
     .then(data => res.json(data))
     .catch(e => {
         res.status(404).send(e.message);
-        console.log(e.stack);
     });
     
 });

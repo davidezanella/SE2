@@ -14,6 +14,8 @@ produces:
 paths:
   /users:
     get:
+      tags:
+      - "Users"
       parameters:
         - in: query
           name: name
@@ -30,15 +32,16 @@ paths:
       summary: Returns the list of all users.
       responses:
         200:
-          description: OK
+          description: The IDs of the users.
           schema:
             type: array
-            description: The IDs of the users
             items: 
               type: integer
         404:
           description: Not Found
     post:
+      tags:
+      - "Users"
       summary: Create a new user.
       parameters:
         - in: body
@@ -49,10 +52,9 @@ paths:
             $ref: '#/definitions/User_no_id'
       responses:
         201:
-          description: OK
+          description: The ID of the created user.
           schema:
             type: integer
-            description: The ID of the created user
         400:
           description: Bad Request
                 
@@ -63,15 +65,19 @@ paths:
         required: true
         type: integer
     get:
+      tags:
+      - "Users"
       summary: Returns a user by ID.
       responses:
         200:
-          description: OK
+          description: The requested user.
           schema:
             $ref: '#/definitions/User'
         404:
           description: Not Found
     put:
+      tags:
+      - "Users"
       summary: Update a user by ID.
       parameters:
         - in: body
@@ -82,14 +88,16 @@ paths:
             $ref: '#/definitions/User_no_id'
       responses:
         200:
-          description: OK
+          description: OK, updated.
         409:
           description: Conflict
     delete:
+      tags:
+      - "Users"
       summary: Delete a user by ID.
       responses:
         204:
-          description: No Content
+          description: OK, deleted.
         404:
           description: Not Found
                      
@@ -100,6 +108,8 @@ paths:
         required: true
         type: integer
     get:
+      tags:
+      - "Users"
       parameters:
         - in: query
           name: role
@@ -120,10 +130,9 @@ paths:
       summary: Returns list of exams taken by a user identified by ID.
       responses:
         200:
-          description: OK
+          description: The IDs of the exams.
           schema:
             type: array
-            description: The IDs of the exams
             items: 
               type: integer
         404:
@@ -131,6 +140,8 @@ paths:
         
   /tasks:
     get:
+      tags:
+      - "Tasks"
       parameters:
         - in: query
           name: title
@@ -157,15 +168,16 @@ paths:
       summary: Returns the list of all tasks.
       responses:
         200:
-          description: OK
+          description: The IDs of the tasks.
           schema:
             type: array
             items: 
               type: integer
-            description: The IDs of the tasks
         404:
           description: Not Found
     post:
+      tags:
+      - "Tasks"
       summary: Create a task.
       parameters:
         - in: body
@@ -176,10 +188,9 @@ paths:
             $ref: '#/definitions/Task_no_id'
       responses:
         201:
-          description: OK
+          description: The ID of the created task.
           schema:
             type: integer
-            description: The ID of the created task
         400:
           description: Bad Request
             
@@ -190,15 +201,19 @@ paths:
         required: true
         type: integer
     get:
+      tags:
+      - "Tasks"
       summary: Returns a task by ID.
       responses:
         200:
-          description: OK
+          description: The requested task.
           schema:
             $ref: '#/definitions/Task'
         404:
           description: Not Found
     put:
+      tags:
+      - "Tasks"
       summary: Update a task by ID.
       parameters:
         - in: body
@@ -209,19 +224,23 @@ paths:
             $ref: '#/definitions/Task_no_id'
       responses:
         200:
-          description: OK
+          description: OK, updated.
         409:
           description: Conflict
     delete:
+      tags:
+      - "Tasks"
       summary: Delete a task by ID.
       responses:
         204:
-          description: No Content
+          description: OK, deleted.
         404:
           description: Not Found
             
   /answers:
     get:
+      tags:
+      - "Answers"
       parameters:
         - in: query
           name: user_id
@@ -238,15 +257,16 @@ paths:
       summary: Returns the list of all answers.
       responses:
         200:
-          description: OK
+          description:  The IDs of the answers.
           schema:
             type: array
             items: 
               type: integer
-            description: The IDs of the answers
         404:
           description: Not Found
     post:
+      tags:
+      - "Answers"
       summary: Create an answer.
       parameters:
         - in: body
@@ -254,13 +274,12 @@ paths:
           description: The answer to create
           required: true
           schema:
-            $ref: '#/definitions/Task_no_id'
+            $ref: '#/definitions/Answer_no_id'
       responses:
         201:
-          description: OK
+          description: The ID of the created answer
           schema:
             type: integer
-            description: The ID of the created answer
         400:
           description: Bad Request
           
@@ -271,15 +290,19 @@ paths:
         required: true
         type: integer
     get:
+      tags:
+      - "Answers"
       summary: Returns an answer by answerID.
       responses:
         200:
-          description: OK
+          description: The requested answer.
           schema:
             $ref: '#/definitions/Answer'
         404:
           description: Not Found
     put:
+      tags:
+      - "Answers"
       summary: Submit an answer.
       parameters:
         - in: body
@@ -290,19 +313,23 @@ paths:
             $ref: '#/definitions/Answer_no_id'
       responses:
         200:
-          description: OK
+          description: OK, submitted.
         409:
           description: Conflict
     delete:
+      tags:
+      - "Answers"
       summary: Delete an answer by ID.
       responses:
         204:
-          description: No Content
+          description: OK, deleted.
         404:
           description: Not Found
             
   /exams:
     get:
+      tags:
+      - "Exams"
       parameters:
         - in: query
           name: role
@@ -323,15 +350,16 @@ paths:
       summary: Returns all the exams.
       responses:
         200:
-          description: OK
+          description: The IDs of the user exams
           schema:
             type: array
             items: 
               type: integer
-            description: The IDs of the user exams
         404:
           description: Not Found
     post:
+      tags:
+      - "Exams"
       summary: Create a new exam.
       parameters:
         - in: body
@@ -342,10 +370,9 @@ paths:
             $ref: '#/definitions/Exam_no_id'
       responses:
         201:
-          description: OK
+          description: The ID of the created exam
           schema:
             type: integer
-            description: The ID of the created exam
         400:
           description: Bad Request
             
@@ -356,15 +383,19 @@ paths:
         required: true
         type: integer
     get:
+      tags:
+      - "Exams"
       summary: Returns an exam by ID.
       responses:
         200:
-          description: OK
+          description: The requested exam.
           schema:
             $ref: '#/definitions/Exam'
         404:
           description: Not Found
     put:
+      tags:
+      - "Exams"
       summary: Update an exam by ID.
       parameters:
         - in: body
@@ -375,14 +406,16 @@ paths:
             $ref: '#/definitions/Exam_no_id'
       responses:
         200:
-          description: OK
+          description: OK, updated.
         409:
           description: Conflict
     delete:
+      tags:
+      - "Exams"
       summary: Delete a exam by ID.
       responses:
         204:
-          description: No Content
+          description: OK, deleted.
         404:
           description: Not Found
           
@@ -393,16 +426,19 @@ paths:
         required: true
         type: integer
     post:
+      tags:
+      - "Exams"
       parameters:
         - in: body
           name: userID
           required: true
           schema:
             type: integer
-      summary: Submit ad exam.
+      summary: Submit an exam.
+      description: When you call this endpoint you confirm the given answers and you cannot update them nor submit new ones.
       responses:
         200:
-          description: OK
+          description: OK, submitted.
         400:
           description: Bad Request 
             
@@ -413,16 +449,19 @@ paths:
         required: true
         type: integer
     post:
+      tags:
+      - "Exams"
       parameters:
         - in: body
           name: userID
           required: true
           schema:
               type: integer
-      summary: Withdraw from ad exam.
+      summary: Withdraw from an exam.
+      description: When you call this endpoint you cannot answer or submit an exam and you will not receive any mark.
       responses:
         200:
-          description: OK
+          description: OK, withdrawed.
         400:
           description: Bad Request  
           
@@ -433,6 +472,8 @@ paths:
         required: true
         type: integer
     post:
+      tags:
+      - "Exams"
       parameters:
         - in: body
           name: userID
@@ -442,7 +483,7 @@ paths:
       summary: Start an exam.
       responses:
         200:
-          description: OK
+          description: OK, started.
         400:
           description: Bad Request  
                 
@@ -453,15 +494,16 @@ paths:
         required: true
         type: integer
     get:
+      tags:
+      - "Exams"
       summary: Retrieve list of result ID of an exam.
       responses:
         200:
-          description: OK
+          description: The IDs of the users with the IDs of the results
           schema:
             type: array
             items: 
               type: "object"
-              description: The IDs of the users with the IDs of the results
               properties:
                 user_id:
                   type: integer
@@ -477,6 +519,8 @@ paths:
         required: true
         type: integer
     get:
+      tags:
+      - "Exams"
       parameters:
         - in: query
           name: user_id
@@ -493,12 +537,11 @@ paths:
       summary: Retrieve list of answer ID of an exam.
       responses:
         200:
-          description: OK
+          description: The IDs of the users with the IDs of the answers
           schema:
             type: array
             items: 
               type: "object"
-              description: The IDs of the users with the IDs of the answers
               properties:
                 user_id:
                   type: integer
@@ -514,6 +557,8 @@ paths:
         required: true
         type: integer
     get:
+      tags:
+      - "Exams"
       parameters:
         - in: query
           name: user_id
@@ -526,12 +571,11 @@ paths:
       summary: Retrieve list of answers ID of an exam to peer review.
       responses:
         200:
-          description: OK
+          description: The IDs of the users with the IDs of the answers.
           schema:
             type: array
             items: 
               type: "object"
-              description: The IDs of the users with the IDs of the answers
               properties:
                 user_id:
                   type: integer
@@ -547,6 +591,8 @@ paths:
         required: true
         type: integer
     get:
+      tags:
+      - "Exams"
       parameters:
         - in: query
           name: user_id
@@ -559,12 +605,11 @@ paths:
       summary: Retrieve list of peer-correction ID of an exam.
       responses:
         200:
-          description: OK
+          description: The IDs of the users with the IDs of the peer-correction
           schema:
             type: array
             items: 
               type: "object"
-              description: The IDs of the users with the IDs of the peer-correction
               properties:
                 user_id:
                   type: integer
@@ -576,6 +621,8 @@ paths:
               
   /corrections:
     get:
+      tags:
+      - "Corrections"
       parameters:
         - in: query
           name: answer_id
@@ -588,15 +635,16 @@ paths:
       summary: Returns all the corrections.
       responses:
         200:
-          description: OK
+          description: The IDs of the corrections.
           schema:
             type: array
-            description: The IDs of the corrections
             items: 
               type: integer
         404:
           description: Not Found
     post:
+      tags:
+      - "Corrections"
       summary: Create a new correction.
       parameters:
         - in: body
@@ -607,10 +655,9 @@ paths:
             $ref: '#/definitions/Correction_no_id'
       responses:
         201:
-          description: OK
+          description: The IDs of the result
           schema:
             type: integer
-            description: The IDs of the result
         400:
           description: Bad Request
             
@@ -621,15 +668,19 @@ paths:
         required: true
         type: integer
     get:
+      tags:
+      - "Corrections"
       summary: Returns a correction by ID.
       responses:
         200:
-          description: OK
+          description: The requested correction.
           schema:
             $ref: '#/definitions/Correction'
         404:
           description: Not Found
     put:
+      tags:
+      - "Corrections"
       summary: Update a correction by ID.
       parameters:
         - in: body
@@ -640,19 +691,23 @@ paths:
             $ref: '#/definitions/Correction_no_id'
       responses:
         200:
-          description: OK
+          description: OK, updated
         409:
           description: Conflict
     delete:
+      tags:
+      - "Corrections"
       summary: Delete a correction by ID.
       responses:
         204:
-          description: No Content
+          description: OK, deleted.
         404:
           description: Not Found
               
   /peer-corrections:
     get:
+      tags:
+      - "Peer corrections"
       parameters:
         - in: query
           name: answer_id
@@ -665,15 +720,16 @@ paths:
       summary: Returns all the peer-corrections.
       responses:
         200:
-          description: OK
+          description: The IDs of the peer-corrections
           schema:
-            description: The IDs of the peer-corrections
             type: array
             items: 
               type: integer
         404:
           description: Not Found
     post:
+      tags:
+      - "Peer corrections"
       summary: Create a new peer-correction.
       parameters:
         - in: body
@@ -684,10 +740,9 @@ paths:
             $ref: '#/definitions/Peer-correction_no_id'
       responses:
         201:
-          description: OK
+          description: The ID of the created peer-correction
           schema:
             type: integer
-            description: The ID of the created peer-correction
         400:
           description: Bad Request
             
@@ -698,15 +753,19 @@ paths:
         required: true
         type: integer
     get:
+      tags:
+      - "Peer corrections"
       summary: Returns a peer-correction by ID.
       responses:
         200:
-          description: OK
+          description: The requested peer-correction.
           schema:
             $ref: '#/definitions/Peer-correction'
         404:
           description: Not Found
     put:
+      tags:
+      - "Peer corrections"
       summary: Update a peer-correction by ID.
       parameters:
         - in: body
@@ -717,19 +776,23 @@ paths:
             $ref: '#/definitions/Peer-correction_no_id'
       responses:
         200:
-          description: OK
+          description: OK, updated.
         409:
           description: Conflict
     delete:
+      tags:
+      - "Peer corrections"
       summary: Delete a peer-correction by ID.
       responses:
         204:
-          description: No Content
+          description: OK, deleted.
         404:
           description: Not Found
           
   /TA-peer-corrections:
     get:
+      tags:
+      - "TA peer corrections"
       parameters:
         - in: query
           name: user_id
@@ -738,15 +801,16 @@ paths:
       summary: Returns all the TA-peer-corrections.
       responses:
         200:
-          description: OK
+          description: The IDs of the TA-peer-corrections.
           schema:
             type: array
-            description: The IDs of the TA-peer-corrections
             items: 
               type: integer
         404:
           description: Not Found
     post:
+      tags:
+      - "TA peer corrections"
       summary: Create a new TA-peer-correction.
       parameters:
         - in: body
@@ -757,10 +821,9 @@ paths:
             $ref: '#/definitions/TA-peer-correction_no_id'
       responses:
         201:
-          description: OK
+          description: The ID of the created TA-peer-corrections.
           schema:
             type: integer
-            description: The ID of the created TA-peer-corrections
         400:
           description: Bad Request
             
@@ -771,15 +834,19 @@ paths:
         required: true
         type: integer
     get:
+      tags:
+      - "TA peer corrections"
       summary: Returns a TA-peer-correction by ID.
       responses:
         200:
-          description: OK
+          description: The requested TA-peer-correction. 
           schema:
             $ref: '#/definitions/TA-peer-correction'
         404:
           description: Not Found
     put:
+      tags:
+      - "TA peer corrections"
       summary: Update a TA-peer-correction by ID.
       parameters:
         - in: body
@@ -790,20 +857,24 @@ paths:
             $ref: '#/definitions/TA-peer-correction_no_id'
       responses:
         200:
-          description: OK
+          description: OK, updated.
         409:
           description: Conflict
     delete:
+      tags:
+      - "TA peer corrections"
       summary: Delete a TA-peer-correction by ID.
       responses:
         204:
-          description: No Content
+          description: OK, deleted.
         404:
           description: Not Found
           
             
   /results:
     get:
+      tags:
+      - "Results"
       parameters:
         - in: query
           name: exam_id
@@ -816,10 +887,9 @@ paths:
       summary: Returns all the results.
       responses:
         200:
-          description: OK
+          description: The IDs of the results.
           schema:
             type: array
-            description: The IDs of the results
             items: 
               type: integer
         404:
@@ -832,10 +902,12 @@ paths:
         required: true
         type: integer
     get:
+      tags:
+      - "Results"
       summary: Returns a result by ID.
       responses:
         200:
-          description: OK
+          description: The requested result.
           schema:
             $ref: '#/definitions/Result'
         404:
@@ -1145,7 +1217,7 @@ definitions:
       task_id:
         description: The ID of the task which the answer refers to
         type: integer
-      answer:
+      answers:
         description: The text of the answer
         type: array
         items:
@@ -1170,16 +1242,11 @@ definitions:
       task_id:
         description: The ID of the task which the answer refers to
         type: integer
-      answer:
+      answers:
         description: The text of the answer
         type: array
         items:
           type: string
-      submitted_at:
-        description: The submission date-time of the answer
-        type: string
-        format: date-time
-        example: "2018-11-06T10:09:23:15Z"
     required:  
       - user_id
       - task_id
