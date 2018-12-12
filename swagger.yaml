@@ -1026,7 +1026,7 @@ definitions:
         items:
             type: string
         example: ["", ""]
-        required: [$type == "multi_choice"]
+        required: [$type == "multi_choice" || $type=="single_choice"]
       correct_answer:
         description: The correct answers of the task
         type: array
