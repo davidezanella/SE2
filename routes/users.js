@@ -50,6 +50,20 @@ router.delete("/users/:id", (req, res) => {
         });
 });
 
+router.put('/users/:id', (req, res) => {
+    let id = req.params.id;
+    let username = req.body.username;
+    let name = req.body.name;
+    let surname = req.body.surname;
+    let email = req.body.email;
+
+    users_logic.updateUserById(id, username, name, surname, email)
+        .then(data => res.json(data))
+        .catch(e => {
+            res.status(404).send(e.message);
+        });
+});
+
 module.exports = router;
 
 // CREATE TABLE users (

@@ -22,6 +22,10 @@ let users_db = {
         // When the user is successfully deleted it returns true.
         let response_message = await db.executeQuery("DELETE FROM users WHERE id=$1", [id]);
         return true;
+    },
+    editUser: async function(id, username, name, surname, email) {
+        let res = await db.executeQuery('UPDATE users SET username = $1, name = $2, surname = $3, email = $4 WHERE id = $5', [username, name, surname, email, id]);
+        return true;
     }
 };
 
