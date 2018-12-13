@@ -175,7 +175,7 @@ test('Get all users via API', async () => {
     let surname = undefined;
     let email = undefined;
 
-    let response = await fetch('http://localhost:3000/v1/answers?name=' + name + '&surname=' + surname + '&email=' + email);
+    let response = await fetch('http://localhost:3000/v1/users');
 
     let json = await response.json();
 
@@ -189,7 +189,7 @@ test('Get users with filters via API', async () => {
     let surname = "draane";
     let email = "andre@test.it";
 
-    let response = await fetch('http://localhost:3000/v1/answers?name=' + name + '&surname=' + surname + '&email=' + email);
+    let response = await fetch('http://localhost:3000/v1/users?name=' + name + '&surname=' + surname + '&email=' + email);
 
     let json = await response.json();
 
