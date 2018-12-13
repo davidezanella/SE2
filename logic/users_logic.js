@@ -46,6 +46,31 @@ let users = {
             throw new Error("The user id must be a positive integer!");
         }
         return await users_db.deleteUser(userId);
+    },
+    updateUserById: async function(id, username, name, surname, email) {
+        var user;
+        try {
+          user = await this.getUserById(id);
+        }
+        catch (e) {
+          throw new Error(e.message);
+        }
+        if (user == null || user.id == null) {
+          console.log(user);
+          throw new Error("User not found");
+        }
+
+        if (!isString(username))
+            throw new Error("Invalid type of the username parameter!");
+        if (!isString(name))
+            throw new Error("Invalid type of the name parameter!");
+        if (!isString(surname))
+            throw new Error("Invalid type of the surname parameter!");
+        if (!isString(email))
+            throw new Error("Invalid type of the email parameter!");
+
+        await users_db.editUser(id, username, name, surname, email);
+        return {};
     }
 };
 
