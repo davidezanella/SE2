@@ -473,3 +473,158 @@ test('Insert a valid user via API', async () => {
   if (response.status === 201)
     expect(typeof text).toBeInstanceOf('number');
 });
+
+// UPDATE USER
+let _id = null;
+async function get_id () {
+  if (_id !== null) return _id;
+  let users_ids = await users_logic.getAllUsers();
+  let id;
+  if (users_ids.length > 0)
+    id = users_ids[0];
+  else
+    id = await users_logic.createNewUser("user", "name", "surn", "mail");
+  _id = id;
+  return id;
+}
+
+test('All params /users/id PUT', async () => {
+  let id = await get_id();
+  let username = "draane";
+  let name = "andrea";
+  let surname = "dalla costa";
+  let email = "andrea@test.me";
+
+  let response = await users_logic.updateUserById(id, username, name, surname, email);
+
+  expect(response).toEqual({});
+});
+test('Username is undefined/null /users PUT', async () => {
+  let id = await get_id();
+  let username = undefined;
+  let name = "andrea";
+  let surname = "dalla costa";
+  let email = "andrea@test.me";
+
+  expect(users_logic.updateUserById(id, username, name, surname, email)).rejects.toBeInstanceOf(Error);
+  username = null;
+  expect(users_logic.updateUserById(id, username, name, surname, email)).rejects.toBeInstanceOf(Error);
+});
+test('Name is undefined/null /users PUT', async () => {
+  let id = await get_id();
+  let username = "draane";
+  let name = undefined;
+  let surname = "dalla costa";
+  let email = "andrea@test.me";
+
+  expect(users_logic.updateUserById(id, username, name, surname, email)).rejects.toBeInstanceOf(Error);
+  name = null;
+  expect(users_logic.updateUserById(id, username, name, surname, email)).rejects.toBeInstanceOf(Error);
+});
+test('Surname is undefined/null /users PUT', async () => {
+  let id = await get_id();
+  let username = "draane";
+  let name = "andrea";
+  let surname = undefined;
+  let email = "andrea@test.me";
+
+  expect(users_logic.updateUserById(id, username, name, surname, email)).rejects.toBeInstanceOf(Error);
+  surname = null;
+  expect(users_logic.updateUserById(id, username, name, surname, email)).rejects.toBeInstanceOf(Error);
+});
+test('Email is undefined/null /users PUT', async () => {
+  let id = await get_id();
+  let username = "draane";
+  let name = "andrea";
+  let surname = "dalla costa";
+  let email = undefined;
+
+  expect(users_logic.updateUserById(id, username, name, surname, email)).rejects.toBeInstanceOf(Error);
+  email = null;
+  expect(users_logic.updateUserById(id, username, name, surname, email)).rejects.toBeInstanceOf(Error);
+});
+
+test('Username is not string /users PUT', async () => {
+  let id = await get_id();
+  let username = ["draane"];
+  let name = "andrea";
+  let surname = "dalla costa";
+  let email = "andrea@test.me";
+
+  expect(users_logic.updateUserById(id, username, name, surname, email)).rejects.toBeInstanceOf(Error);
+  username = {};
+  expect(users_logic.updateUserById(id, username, name, surname, email)).rejects.toBeInstanceOf(Error);
+});
+test('Name is not string /users PUT', async () => {
+  let id = await get_id();
+  let username = "draane";
+  let name = ["andrea"];
+  let surname = "dalla costa";
+  let email = "andrea@test.me";
+
+  expect(users_logic.updateUserById(id, username, name, surname, email)).rejects.toBeInstanceOf(Error);
+  name = {};
+  expect(users_logic.updateUserById(id, username, name, surname, email)).rejects.toBeInstanceOf(Error);
+});
+test('Surname is not string /users PUT', async () => {
+  let id = await get_id();
+  let username = "draane";
+  let name = "andrea";
+  let surname = ["dalla costa"];
+  let email = "andrea@test.me";
+
+  expect(users_logic.updateUserById(id, username, name, surname, email)).rejects.toBeInstanceOf(Error);
+  surname = {};
+  expect(users_logic.updateUserById(id, username, name, surname, email)).rejects.toBeInstanceOf(Error);
+});
+test('Email is not string /users PUT', async () => {
+  let id = await get_id();
+  let username = "draane";
+  let name = "andrea";
+  let surname = "dalla costa";
+  let email = ["andrea@test.me"];
+
+  expect(users_logic.updateUserById(id, username, name, surname, email)).rejects.toBeInstanceOf(Error);
+  email = {};
+  expect(users_logic.updateUserById(id, username, name, surname, email)).rejects.toBeInstanceOf(Error);
+});
+
+
+
+/* Users PUT */
+test('Update a valid user via API', async () => {
+  let id = await get_id();
+  let body = {
+    id: id,
+    username: "draane",
+    name: "andrea",
+    surname: "dalla costa",
+    email: "andrea@test.me"
+   };
+
+  let response = await fetch('http://localhost:3000/v1/users/' + id, {
+      method: 'PUT',
+      body: JSON.stringify(body),
+      headers: { 'Content-Type': 'application/json' },
+  });
+
+  expect(response.status).toBe(200);
+});
+
+test('Update a non valid user via API', async () => {
+  let id = await get_id();
+  let body = {
+    username: null,
+    name: undefined,
+    surname: "dalla costa",
+    email: "andrea@test.me"
+   };
+
+  let response = await fetch('http://localhost:3000/v1/users/' + id, {
+      method: 'PUT',
+      body: JSON.stringify(body),
+      headers: { 'Content-Type': 'application/json' },
+  });
+
+  expect(response.status).toBe(404);
+});
